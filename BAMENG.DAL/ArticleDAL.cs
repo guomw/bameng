@@ -20,6 +20,11 @@ namespace BAMENG.DAL
 {
     public class ArticleDAL : AbstractDAL, IArticleDAL
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public int AddArticle(ArticleModel model)
         {
             throw new NotImplementedException();

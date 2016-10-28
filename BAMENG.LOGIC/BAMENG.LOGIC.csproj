@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSystemLogic.cs" />
+    <Compile Include="ArticleLogic.cs" />
     <Compile Include="CustomerLogic.cs" />
     <Compile Include="FactoryDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
