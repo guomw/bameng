@@ -37,7 +37,7 @@ namespace BAMENG.DAL
                 new SqlParameter("@BelongOne",model.UserId),
             };
             //生成sql语句
-            return getPageData<CustomerModel>(model.PageSize, model.PageIndex, strSql, "C.CreateTime", param);
+            return getPageData<CustomerModel>(model.PageSize, model.PageIndex, strSql, "C.CreateTime", false, param);
         }
     }
 }

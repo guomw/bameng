@@ -110,6 +110,15 @@ namespace BAMENG.ADMIN.handler
                     case "GETCUSTOMERLISTBYUSERID":
                         GetCustomerListByUserId();
                         break;
+                    case "GETLEVELLIST":
+                        GetLevelList();
+                        break;
+                    case "DELETELEVEL":
+                        DeleteLevel();
+                        break;
+                    case "EDITLEVEL":
+                        EditLevel();
+                        break;
                     default:
                         break;
                 }
@@ -301,6 +310,40 @@ namespace BAMENG.ADMIN.handler
             };
             var data = CustomerLogic.GetCustomerListByUserId(model);
             json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+
+        /// <summary>
+        /// 获取等级
+        /// </summary>
+        public void GetLevelList()
+        {
+            var data = UserLogic.GetLevelList(GetFormValue("type", -1));
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+
+        /// <summary>
+        /// 删除等级
+        /// </summary>
+        private void DeleteLevel()
+        {
+            if (UserLogic.DeleteLevel(GetFormValue("levelId", 0)))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
+        }
+        /// <summary>
+        /// 编辑等级
+        /// </summary>
+        private void EditLevel()
+        {
+            int levelId = GetFormValue("levelid", 0);
+            int levelType = GetFormValue("leveltype", 0);
+            string levelname = GetFormValue("levelname", "");
+            int upgradeCount = GetFormValue("levelmembernum", 0);
+            if (UserLogic.EditLevel(levelId, levelType, levelname, upgradeCount))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
         }
     }
 }

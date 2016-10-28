@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace BAMENG.LOGIC
 {
     /// <summary>
-    /// 工厂管理
+    /// 
     /// </summary>
     public class FactoryDispatcher
     {
@@ -47,6 +47,15 @@ namespace BAMENG.LOGIC
         public static ICustomerDAL CustomerFactory()
         {
             return new CustomerDAL();
+        }
+
+        /// <summary>
+        /// 资讯
+        /// </summary>
+        /// <returns></returns>
+        public static IArticleDAL ArticleFactory()
+        {
+            return new ArticleDAL();
         }
     }
 }

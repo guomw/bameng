@@ -68,5 +68,66 @@ namespace BAMENG.IDAL
         bool DeleltUserInfo(int userId);
 
 
+        /// <summary>
+        /// 获取商户的等级数量
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        int GetLevelCount(int storeId, int type);
+
+        /// <summary>
+        /// 获取当前最大等级级别
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        int GetMaxLevel(int storeId, int type);
+
+        /// <summary>
+        /// 获取等级信息
+        /// </summary>
+        /// <param name="level">级别</param>
+        /// <param name="storeId">商户ID</param>
+        /// <returns></returns>
+        MallUserLevelModel GetLevelModel(int levelId, int storeId);
+
+        /// <summary>
+        /// 删除等级
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        bool DeleteLevel(int levelId, int storeId);
+
+
+        /// <summary>
+        /// 修改等级
+        /// 作者：郭孟稳
+        /// 时间：2016.07.13
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        bool UpdateLevel(MallUserLevelModel model);
+
+        /// <summary>
+        /// 添加等级
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        int InsertLevel(MallUserLevelModel model);
+
+        /// <summary>
+        /// 获取等级列表
+        /// 作者：郭孟稳        
+        /// </summary>
+        ///<param name="storeId"></param>
+        ///<param name="type">0盟友，1盟主</param>
+        /// <returns></returns>
+        ResultPageModel GetLevelList(int storeId, int type);
     }
 }

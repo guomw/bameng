@@ -10,22 +10,19 @@
     2013-2016. All rights reserved.
 **/
 
-var userHelper = {
+var levelHelper = {
     ajaxUrl: "/handler/HQ.ashx",
-    loaclData: [],
-    isAlly: hotUtil.getQuery("type"),
-    pageIndex: 1,
-    loadMastersList: function (page) {
+    loaclData: {
+        one: [],
+        two: []
+    },
+    isAlly: 1,
+    reset: null,
+    loadlevelList: function (type) {
         var self = this;
-        self.loaclData = [];
-        this.pageIndex = page;
         var postData = {
-            action: "GetUserList",
-            pageIndex: page,
-            pageSize: 20,
-            key: $("#keyword").val(),
-            searchType: $("#stdType").val(),
-            ally: this.isAlly == 1 ? 0 : 1
+            action: "GetLevelList",
+            type: type
         }
         hotUtil.loading.show();
         hotUtil.ajaxCall(this.ajaxUrl, postData, function (ret, err) {
@@ -33,68 +30,66 @@ var userHelper = {
                 if (ret.status == 200) {
                     if (ret.data) {
                         var listhtml = "";
-                        self.loaclData = ret.data.Rows;
+                        if (type == 1)
+                            self.loaclData.two = ret.data.Rows;
+                        else
+                            self.loaclData.one = ret.data.Rows;
+                        var n = 1;
                         $.each(ret.data.Rows, function (i, item) {
                             var tempHtml = $("#templist").html();
-                            tempHtml = tempHtml.replace("{LoginName}", item.LoginName);
-                            tempHtml = tempHtml.replace(/{UserId}/gm, item.UserId);
-                            tempHtml = tempHtml.replace("{ShopName}", item.ShopProv + " " + item.ShopCity + " " + item.ShopName);
-                            tempHtml = tempHtml.replace(/{RealName}/g, item.RealName);
-                            tempHtml = tempHtml.replace("{NickName}", item.NickName);
-                            tempHtml = tempHtml.replace("{UserMobile}", item.UserMobile);
-                            tempHtml = tempHtml.replace("{IsActive}", item.IsActive);
-                            tempHtml = tempHtml.replace("{type}", self.isAlly);
-                            if (!hotUtil.isNullOrEmpty(item.UserHeadImg))
-                                tempHtml = tempHtml.replace("{UserHeadImg}", item.UserHeadImg);
-                            else
-                                tempHtml = tempHtml.replace("{UserHeadImg}", "/static/img/bg.png");
-                            tempHtml = tempHtml.replace("{OrderSuccessAmount}", self.isAlly == 1 ? item.CustomerAmount : item.OrderSuccessAmount);
-                            tempHtml = tempHtml.replace("{ActiveStatus}", item.IsActive == 1 ? "<span style='color:red;'>激活</span>" : "已冻结")
+                            tempHtml = tempHtml.replace("{LevelName}", item.UL_LevelName);
+                            tempHtml = tempHtml.replace("{MemberNum}", item.UL_MemberNum);
+                            tempHtml = tempHtml.replace(/{LevelId}/gm, item.UL_ID);
+                            tempHtml = tempHtml.replace(/{type}/gm, item.UL_Type);
+                            tempHtml = tempHtml.replace("{Level}", n);
+                            tempHtml = tempHtml.replace("{WhereTitle}", type == 1 ? "盟友" : "成交订单");
+                            tempHtml = tempHtml.replace("{unit}", type == 1 ? "人" : "次");
                             listhtml += tempHtml;
+                            n++;
                         });
-                        $("#listMode").html(listhtml);
-
-                        //初始化分页
-                        var pageinate = new hotUtil.paging(".pagination", ret.data.PageIndex, ret.data.PageSize, ret.data.PageCount, ret.data.Total, 7);
-                        pageinate.init((p) => {
-                            goTo(p, function (page) {
-                                userHelper.loadList(page);
-                            });
-                        });
+                        if (type == 1)
+                            $("#listMode").html(listhtml);
+                        else
+                            $("#listMode2").html(listhtml);
                     }
                 }
             }
             hotUtil.loading.close();
         });
     },
-    search: function () {
-        userHelper.loadList(1);
-    },
-    searchAll: function () {
-        $("#keyword").val("");
-        userHelper.loadList(1);
-    },
-    getModel: function (dataId) {
+    getModel: function (dataId, type) {
         var model = null;
-        if (!hotUtil.isNullOrEmpty(dataId) && this.loaclData != null && this.loaclData.length > 0) {
-            $.each(this.loaclData, function (i, item) {
-                if (item.UserId == dataId) {
-                    model = item;
-                    return false;
-                }
-            });
+        if (type == 1) {
+            if (this.loaclData.two != null && this.loaclData.two.length > 0) {
+                $.each(this.loaclData.two, function (i, item) {
+                    if (item.UL_ID == dataId) {
+                        model = item;
+                        return false;
+                    }
+                });
+            }
+        }
+        else {
+            if (this.loaclData.one != null && this.loaclData.one.length > 0) {
+                $.each(this.loaclData.one, function (i, item) {
+                    if (item.UL_ID == dataId) {
+                        model = item;
+                        return false;
+                    }
+                });
+            }
         }
         return model;
     },
     edit: function () {
         var param = hotUtil.serializeForm("#signupForm .form-control");
-        param.action = "editUser";
+        param.action = "editlevel";
         hotUtil.loading.show();
         hotUtil.ajaxCall(this.ajaxUrl, param, function (ret, err) {
             if (ret) {
                 if (ret.status == 200) {
                     swal("提交成功！", "", "success");
-                    userHelper.loadList(userHelper.pageIndex);
+                    levelHelper.loadlevelList(parseInt($("#leveltype").val()));
                     $(".close").click();
                 }
                 else {
@@ -104,7 +99,7 @@ var userHelper = {
             hotUtil.loading.close();
         });
     },
-    del: function (dataId) {
+    del: function (dataId, type) {
         swal({
             title: "您确定要删除这条信息吗",
             text: "删除后将无法恢复，请谨慎操作！",
@@ -115,15 +110,16 @@ var userHelper = {
             closeOnConfirm: false,
         }, function () {
             var param = {
-                action: "DeleteUser",
-                userid: dataId
+                action: "DeleteLevel",
+                levelId: dataId
             }
             hotUtil.loading.show();
-            hotUtil.ajaxCall(userHelper.ajaxUrl, param, function (ret, err) {
+            hotUtil.ajaxCall(levelHelper.ajaxUrl, param, function (ret, err) {
                 if (ret) {
                     if (ret.status == 200) {
                         swal("删除成功！", "您已经永久删除了这条信息。", "success");
-                        userHelper.loadList(userHelper.pageIndex);
+                        levelHelper.loadlevelList(type);
+
                     }
                     else {
                         swal(ret.statusText, "", "warning");
@@ -133,89 +129,56 @@ var userHelper = {
             });
         });
     },
-    updateActive: function (dataId, active) {
-        var param = {
-            action: "UpdateUserActive",
-            userid: dataId,
-            active: parseInt(active) == 1 ? 0 : 1
-        }
-        hotUtil.loading.show();
-        hotUtil.ajaxCall(this.ajaxUrl, param, function (ret, err) {
-            if (ret) {
-                if (ret.status == 200) {
-                    swal("提交成功！", "", "success");
-                    userHelper.loadList(userHelper.pageIndex);
-                }
-                else {
-                    swal(ret.statusText, "", "warning");
-                }
-            }
-            hotUtil.loading.close();
-        });
-    },
-    dialog: function (dataId,isAlly) {
-        var data = this.getModel(dataId);
+    dialog: function (dataId, type) {
+        if (this.reset)
+            this.reset.resetForm();
+        levelHelper.validate(type);
+        this.isAlly = type;
+        var data = this.getModel(dataId, type);
+        $("#modal-where-lable").text(type == 0 ? "成交订单数量累计达" : "盟友数量累计达");
+        $(".spanunit").text(type == 0 ? "次" : "人");
         if (data != null) {
-            $("#modal-title").text("编辑" + (isAlly == 1 ? "盟友等级设置" : "盟主等级设置"));
-            $("#userid").val(dataId);
-            $("#username").val(data.RealName);
-            $("#usernickname").val(data.NickName);
-            $("#usermobile").val(data.UserMobile);
-            if (!hotUtil.isNullOrEmpty(data.LoginName))
-                $("#userloginname").val(data.LoginName).attr("readonly", "readonly");
+            $("#modal-title").text("编辑" + (type == 0 ? "盟友等级设置" : "盟主等级设置"));
+            $("#levelid").val(dataId);
+            $("#levelname").val(data.UL_LevelName);
+            $("#levelmembernum").val(data.UL_MemberNum);
         }
         else {
-            $("#modal-title").text("添加盟主信息");
+            $("#modal-title").text("添加" + (type == 0 ? "盟友等级设置" : "盟主等级设置"));
             $("#signupForm input").val("");
         }
+        $("#leveltype").val(type);
     },
     pageInit: function () {
-        userHelper.loadList(userHelper.pageIndex);
-        userHelper.validate();
+        levelHelper.loadlevelList(1);
+        levelHelper.loadlevelList(0);
+
     },
-    validate: function () {
+    validate: function (type) {
         var e = "<i class='fa fa-times-circle'></i> ";
-        $("#signupForm").validate({
+        this.reset = $("#signupForm").validate({
             rules: {
-                username: {
+                levelname: {
                     required: !0,
                     minlength: 2
                 },
-                usermobile: "required",
-                userloginname: {
+                levelmembernum: {
                     required: !0,
-                    minlength: 5
-                },
-                usernickname: "required",
-                password: {
-                    minlength: 6
-                },
-                confirm_password: {
-                    minlength: 6,
-                    equalTo: "#password"
+                    digits: true,
                 }
             },
             messages: {
-                username: {
-                    required: e + "请输入" + (userHelper.isAlly == 1 ? "盟友" : "盟主") + "名称",
-                    minlength: e + "联系人必须两个字符以上"
+                levelname: {
+                    required: e + "请输入" + (type == 0 ? "盟友" : "盟主") + "名称",
+                    minlength: e + "必须两个字符以上"
                 },
-                usermobile: e + "请输入您的手机号码",
-                userloginname: {
-                    required: e + "请输入您的登录名",
-                    minlength: e + "登录名必须5个字符以上"
-                },
-                usernickname: e + "请输入昵称",
-                password: {
-                    minlength: e + "密码必须6个字符以上"
-                },
-                confirm_password: {
-                    minlength: e + "密码必须6个字符以上",
-                    equalTo: e + "两次输入的密码不一致"
+                levelmembernum: {
+                    required: "请输入升级条件",
+                    digits: "只能输入数字"
                 }
             },
             submitHandler: function (form) {
-                userHelper.edit();
+                levelHelper.edit();
             }
         })
     }
@@ -237,7 +200,7 @@ $.validator.setDefaults({
 });
 
 $(function () {
-    userHelper.pageInit();
+    levelHelper.pageInit();
 });
 
 

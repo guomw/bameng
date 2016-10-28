@@ -87,9 +87,9 @@ namespace BAMENG.DAL
         /// <param name="commandParameters"></param>
         /// <param name="callback">回调处理函数</param>
         /// <returns></returns>
-        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, SqlParameter[] commandParameters, Action<List<T>> callback) where T : new()
+        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, SqlParameter[] commandParameters, Action<List<T>> callback, bool orderby = false) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField, orderby);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();
@@ -122,11 +122,12 @@ namespace BAMENG.DAL
         /// <param name="PageIndex"></param>
         /// <param name="strSql"></param>
         /// <param name="orderbyField">排序字段</param>
+        /// <param name="orderby"></param>
         /// <param name="commandParameters"></param>
         /// <returns></returns>
-        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, params SqlParameter[] commandParameters) where T : new()
+        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, bool orderby = false, params SqlParameter[] commandParameters) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField, orderby);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();
@@ -160,9 +161,9 @@ namespace BAMENG.DAL
         /// <param name="orderbyField">排序字段</param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, Action<List<T>> callback) where T : new()
+        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, Action<List<T>> callback, bool orderby = false) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField, orderby);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();
@@ -196,9 +197,9 @@ namespace BAMENG.DAL
         /// <param name="strSql"></param>
         /// <param name="orderbyField">排序字段</param>
         /// <returns></returns>
-        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField) where T : new()
+        public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, bool orderby = false) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField, orderby);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();

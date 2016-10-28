@@ -30,7 +30,7 @@ namespace BAMENG.DAL
         /// </summary>
         private const string APP_USER_SELECT = @"select ue.UserId,ue.UserIdentity,ue.MerchantID,ue.ShopId,ue.IsActive,ue.Score,ue.ScoreLocked,ue.MengBeans,ue.MengBeansLocked,ue.CreateTime
                             ,U.UB_UserLoginName as LoginName,U.UB_UserRealName as RealName,U.UB_UserNickName as NickName,U.UB_UserMobile as UserMobile,U.UB_WxHeadImg as UserHeadImg
-                            ,S.ShopName,S.ShopProv,S.ShopCity
+                            ,S.ShopName,S.ShopProv,S.ShopCity,L.UL_LevelName as LevelName
                              from BM_User_extend ue
                             inner join Hot_UserBaseInfo U with(nolock) on U.UB_UserID =ue.UserId
                             left join BM_ShopManage S with(nolock) on S.ShopID=ue.ShopId
@@ -552,5 +552,173 @@ namespace BAMENG.DAL
                 });
             });
         }
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// 获取等级列表
+        /// 作者：郭孟稳        
+        /// </summary>
+        ///<param name="storeId"></param>
+        ///<param name="type">0盟友，1盟主</param>
+        /// <returns></returns>
+        public ResultPageModel GetLevelList(int storeId, int type)
+        {
+            string strSql = @"select UL.* from Mall_UserLevel UL where UL.UL_CustomerID=@UL_CustomerID and UL.UL_Type=@UL_Type";
+            var param = new[] {
+                    new SqlParameter("@UL_CustomerID", storeId),
+                    new SqlParameter("@UL_Type", type)
+            };
+            return getPageData<MallUserLevelModel>(50, 1, strSql, "UL.UL_Level", true, param);
+        }
+
+
+        /// <summary>
+        /// 添加等级
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public int InsertLevel(MallUserLevelModel model)
+        {
+            string strsql = @"insert into Mall_UserLevel (UL_Level,UL_LevelName,UL_Type,UL_CustomerID,UL_Description,UL_DefaultLevel,UL_Integral
+                                ,UL_MemberNum,UL_DirectTeamNum,UL_IndirectTeamNum,UL_Money,UL_OpenLevel_One,UL_BelongOne_Content,UL_OpenLevel_Two,UL_BelongTwo_Content,UL_GuidetLevel,UL_Gold)
+                                values (@UL_Level,@UL_LevelName,@UL_Type,@UL_CustomerID,@UL_Description,@UL_DefaultLevel,@UL_Integral
+                                ,@UL_MemberNum,@UL_DirectTeamNum,@UL_IndirectTeamNum,@UL_Money,@UL_OpenLevel_One,@UL_BelongOne_Content,@UL_OpenLevel_Two,@UL_BelongTwo_Content,@UL_GuidetLevel,@UL_Gold)
+                                select @@IDENTITY";
+            SqlParameter[] parm = {
+                    new SqlParameter("@UL_Level", model.UL_Level),
+                    new SqlParameter("@UL_LevelName", model.UL_LevelName),
+                    new SqlParameter("@UL_Type", model.UL_Type),
+                    new SqlParameter("@UL_CustomerID", model.UL_CustomerID),
+                    new SqlParameter("@UL_Description", model.UL_Description),
+                    new SqlParameter("@UL_DefaultLevel", model.UL_DefaultLevel),
+                    new SqlParameter("@UL_Integral", model.UL_Integral),
+                    new SqlParameter("@UL_MemberNum", model.UL_MemberNum),
+                    new SqlParameter("@UL_DirectTeamNum", model.UL_DirectTeamNum),
+                    new SqlParameter("@UL_IndirectTeamNum", model.UL_IndirectTeamNum),
+                    new SqlParameter("@UL_Money", model.UL_Money),
+                    new SqlParameter("@UL_OpenLevel_One", model.UL_OpenLevel_One),
+                    new SqlParameter("@UL_BelongOne_Content", model.UL_BelongOne_Content),
+                    new SqlParameter("@UL_OpenLevel_Two", model.UL_OpenLevel_Two),
+                    new SqlParameter("@UL_BelongTwo_Content", model.UL_BelongTwo_Content),
+                    new SqlParameter("@UL_GuidetLevel", model.UL_GuidetLevel),
+                    new SqlParameter("@UL_Gold",model.UL_Gold)
+                    };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strsql, parm));
+        }
+
+
+        /// <summary>
+        /// 修改等级
+        /// 作者：郭孟稳
+        /// 时间：2016.07.13
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateLevel(MallUserLevelModel model)
+        {
+            string strsql = @"update Mall_UserLevel set UL_LevelName=@UL_LevelName,UL_Type=@UL_Type,UL_CustomerID=@UL_CustomerID,UL_Description=@UL_Description,UL_DefaultLevel=@UL_DefaultLevel,UL_Integral=@UL_Integral,UL_MemberNum=@UL_MemberNum,UL_DirectTeamNum=@UL_DirectTeamNum,UL_IndirectTeamNum=@UL_IndirectTeamNum,UL_Money=@UL_Money,UL_OpenLevel_One=@UL_OpenLevel_One,UL_BelongOne_Content=@UL_BelongOne_Content,UL_OpenLevel_Two=@UL_OpenLevel_Two,UL_BelongTwo_Content=@UL_BelongTwo_Content,UL_GuidetLevel=@UL_GuidetLevel,UL_Gold=@UL_Gold where UL_ID=@UL_ID";
+            SqlParameter[] parm = {
+                    new SqlParameter("@UL_ID", model.UL_ID),
+                    new SqlParameter("@UL_LevelName", model.UL_LevelName),
+                    new SqlParameter("@UL_Type", model.UL_Type),
+                    new SqlParameter("@UL_CustomerID", model.UL_CustomerID),
+                    new SqlParameter("@UL_Description", model.UL_Description),
+                    new SqlParameter("@UL_DefaultLevel", model.UL_DefaultLevel),
+                    new SqlParameter("@UL_Integral", model.UL_Integral),
+                    new SqlParameter("@UL_MemberNum", model.UL_MemberNum),
+                    new SqlParameter("@UL_DirectTeamNum", model.UL_DirectTeamNum),
+                    new SqlParameter("@UL_IndirectTeamNum", model.UL_IndirectTeamNum),
+                    new SqlParameter("@UL_Money", model.UL_Money),
+                    new SqlParameter("@UL_OpenLevel_One", model.UL_OpenLevel_One),
+                    new SqlParameter("@UL_BelongOne_Content", model.UL_BelongOne_Content),
+                    new SqlParameter("@UL_OpenLevel_Two", model.UL_OpenLevel_Two),
+                    new SqlParameter("@UL_BelongTwo_Content", model.UL_BelongTwo_Content),
+                    new SqlParameter("@UL_GuidetLevel", model.UL_GuidetLevel),
+                    new SqlParameter("@UL_Gold",model.UL_Gold),
+
+                    };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strsql, parm) == 1;
+        }
+
+        /// <summary>
+        /// 删除等级
+        /// 作者：郭孟稳
+        /// 时间：2016.07.13
+        /// </summary>
+        /// <param name="levelId"></param>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        public bool DeleteLevel(int levelId, int storeId)
+        {
+            string sql1 = "delete from Mall_UserLevel where UL_ID=@levelId";
+            var param = new[] {
+                new SqlParameter("@levelId",levelId)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, sql1, param) > 0;
+        }
+        /// <summary>
+        /// 获取等级信息
+        /// </summary>
+        /// <param name="level">级别</param>
+        /// <param name="storeId">商户ID</param>
+        /// <returns></returns>
+        public MallUserLevelModel GetLevelModel(int levelId, int storeId)
+        {
+            string strsql = @"select UL.* from Mall_UserLevel UL                             
+                            where UL.UL_ID=@UL_ID and UL_CustomerID=@UL_CustomerID";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UL_ID", levelId),
+                   new SqlParameter("@UL_CustomerID", storeId)
+                    };
+
+            MallUserLevelModel model = null;
+            using (IDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strsql, parm))
+            {
+                model = DbHelperSQLP.GetEntity<MallUserLevelModel>(dr);
+            }
+            return model;
+        }
+        /// <summary>
+        /// 获取当前最大等级级别
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        public int GetMaxLevel(int storeId, int type)
+        {
+            string strSql = "select top 1 UL_Level from Mall_UserLevel where UL_CustomerID=@UL_CustomerID  and UL_Type=@UL_Type order by UL_Level desc";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UL_CustomerID", storeId),
+                   new SqlParameter("@UL_Type", type)
+            };
+            object obj = DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm);
+
+            return obj == null ? 0 : Convert.ToInt32(obj);
+        }
+        /// <summary>
+        /// 获取商户的等级数量
+        /// 作者：郭孟稳
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        public int GetLevelCount(int storeId, int type)
+        {
+            string strSql = "select COUNT(*) from Mall_UserLevel where UL_CustomerID=@UL_CustomerID and UL_Type=@UL_Type";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UL_CustomerID", storeId),
+                   new SqlParameter("@UL_Type", type)
+            };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm));
+        }
+
+
     }
 }

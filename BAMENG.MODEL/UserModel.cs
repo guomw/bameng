@@ -609,4 +609,110 @@ namespace BAMENG.MODEL
         public int Orignal_RelId { get; set; }
         public int Target_RelId { get; set; }
     }
+
+
+    /// <summary>
+    /// 用户等级
+    /// </summary>
+    [Serializable]
+    public class MallUserLevelModel
+    {
+        /// <summary>
+        /// UL_ID
+        /// </summary>		
+        private int _ul_id;
+        public int UL_ID
+        {
+            get { return _ul_id; }
+            set { _ul_id = value; }
+        }
+        /// <summary>
+        /// 用户等级，0表示1级
+        /// </summary>		
+        private int _ul_level;
+        public int UL_Level
+        {
+            get { return _ul_level; }
+            set { _ul_level = value; }
+        }
+        /// <summary>
+        /// 等级名称
+        /// </summary>		
+        private string _ul_levelname;
+        public string UL_LevelName
+        {
+            get { return _ul_levelname; }
+            set { _ul_levelname = value; }
+        }
+        /// <summary>
+        /// 等级类型，0表示普通会员，1表示小伙伴
+        /// </summary>		
+        private int _ul_type;
+        public int UL_Type
+        {
+            get { return _ul_type; }
+            set { _ul_type = value; }
+        }
+        /// <summary>
+        /// 商户ID
+        /// </summary>		
+        private int _ul_customerid;
+        public int UL_CustomerID
+        {
+            get { return _ul_customerid; }
+            set { _ul_customerid = value; }
+        }
+
+        public string UL_Description { set; get; }
+
+        public int UL_Integral { set; get; }
+
+
+        public decimal UL_Money { get; set; }
+
+        /// <summary>
+        /// 会员数
+        /// </summary>
+        public int UL_MemberNum { get; set; }
+        /// <summary>
+        /// 直接团队
+        /// </summary>
+        public int UL_DirectTeamNum { get; set; }
+        /// <summary>
+        /// 间接团队
+        /// </summary>
+        public int UL_IndirectTeamNum { get; set; }
+
+        public int UL_DefaultLevel { get; set; }
+
+
+        public int IntegralPreID { set; get; }
+        public int PricePreID { set; get; }
+
+        /// <summary>
+        /// 一级分销商有没有开启等级个性化
+        /// </summary>
+        public bool UL_OpenLevel_One { get; set; }
+        /// <summary>
+        /// 一级分销商等级个性化设置
+        /// </summary>
+        public string UL_BelongOne_Content { get; set; }
+        /// <summary>
+        /// 二级分销商有没有开启等级个性化
+        /// </summary>
+        public bool UL_OpenLevel_Two { get; set; }
+        /// <summary>
+        /// 二级分销商等级个性化设置
+        /// </summary>
+        public string UL_BelongTwo_Content { get; set; }
+        /// <summary>
+        /// 系统默认-1,该等级引导人引导进来的会员等级
+        /// </summary>
+        public int UL_GuidetLevel { get; set; }
+        /// <summary>
+        /// 小金库充值
+        /// </summary>
+        public decimal UL_Gold { get; set; }
+
+    }
 }

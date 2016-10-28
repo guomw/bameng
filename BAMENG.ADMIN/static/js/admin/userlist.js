@@ -15,6 +15,7 @@ var userHelper = {
     loaclData: [],
     isAlly: hotUtil.getQuery("type"),
     pageIndex: 1,
+    reset: null,
     loadList: function (page) {
         var self = this;
         self.loaclData = [];
@@ -154,6 +155,8 @@ var userHelper = {
         });
     },
     dialog: function (dataId) {
+        if (this.reset)
+            this.reset.resetForm();
         var data = this.getModel(dataId);
         if (data != null) {
             $("#modal-title").text("编辑"+(this.isAlly==1?"盟友信息":"盟主信息"));
@@ -185,7 +188,7 @@ var userHelper = {
     },
     validate: function () {
         var e = "<i class='fa fa-times-circle'></i> ";
-        $("#signupForm").validate({
+        this.reset=$("#signupForm").validate({
             rules: {
                 username: {
                     required: !0,

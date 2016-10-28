@@ -14,7 +14,8 @@
 var shopHelper = {
     ajaxUrl: "/handler/HQ.ashx",
     loaclData: [],
-    pageIndex:1,
+    pageIndex: 1,
+    reset:null,
     loadList: function (page) {
         var self = this;
         self.loaclData = [];
@@ -150,6 +151,8 @@ var shopHelper = {
         });
     },
     dialog: function (dataId) {
+        if (this.reset)
+            this.reset.resetForm();
         var data = this.getModel(dataId);
         if (data != null) {
             $("#modal-title").text("编辑");
@@ -206,7 +209,7 @@ $(function () {
 
 
     var e = "<i class='fa fa-times-circle'></i> ";
-    $("#signupForm").validate({
+    shopHelper.reset=$("#signupForm").validate({
         rules: {
             shopname: "required",
             shopcity: "required",

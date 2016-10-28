@@ -119,7 +119,7 @@ namespace BAMENG.DAL
             };
 
             //生成sql语句
-            return getPageData<ShopModel>(model.PageSize, model.PageIndex, strSql, "CreateTime", param);
+            return getPageData<ShopModel>(model.PageSize, model.PageIndex, strSql, "CreateTime", false, param);
 
         }
         /// <summary>

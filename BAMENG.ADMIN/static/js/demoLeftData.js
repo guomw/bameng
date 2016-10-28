@@ -9,14 +9,14 @@
 function getDemoData() {
     var menuList = [];
 
-    menuList.push({
-        ItemCode: "01",
-        ItemNavLabel: "首页",
-        ItemUrl: "home.html",
-        ItemParentCode: "0",
-        ItemShow: 1,
-        ItemIcons: "fa-home"
-    });
+    //menuList.push({
+    //    ItemCode: "01",
+    //    ItemNavLabel: "首页",
+    //    ItemUrl: "home.html",
+    //    ItemParentCode: "0",
+    //    ItemShow: 1,
+    //    ItemIcons: "fa-home"
+    //});
     menuList.push({
         ItemCode: "0201",
         ItemNavLabel: "总店列表",
@@ -47,6 +47,15 @@ function getDemoData() {
         ItemCode: "0204",
         ItemNavLabel: "等级设置",
         ItemUrl: "admin/userlevel.html",
+        ItemParentCode: "0",
+        ItemShow: 1,
+        ItemIcons: "fa-home"
+    });
+
+    menuList.push({
+        ItemCode: "0205",
+        ItemNavLabel: "资讯列表",
+        ItemUrl: "admin/articlelist.html",
         ItemParentCode: "0",
         ItemShow: 1,
         ItemIcons: "fa-home"
