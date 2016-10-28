@@ -32,5 +32,50 @@ namespace BAMENG.LOGIC
                 return dal.GetShopList(ShopType, ShopBelongId, model);
             }
         }
+
+
+        /// <summary>
+        /// 编辑门店信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool EditShopInfo(ShopModel model)
+        {
+            using (var dal = FactoryDispatcher.ShopFactory())
+            {
+                if (model.ShopID > 0)
+                    return dal.UpdateShopInfo(model);
+                else
+                    return dal.AddShopInfo(model) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 删除门店
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public static bool DeleteShop(int shopId)
+        {
+            using (var dal = FactoryDispatcher.ShopFactory())
+            {
+                return dal.DeleltShopInfo(shopId);
+            }
+        }
+
+        /// <summary>
+        /// 冻结或解冻门店
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        public static bool UpdateShopActive(int shopId, int active)
+        {
+            using (var dal = FactoryDispatcher.ShopFactory())
+            {
+                return dal.UpdateShopActive(shopId, active);
+            }
+        }
+
     }
 }

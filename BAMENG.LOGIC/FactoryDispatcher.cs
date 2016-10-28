@@ -31,5 +31,22 @@ namespace BAMENG.LOGIC
             return new ShopDAL();
         }
 
+        /// <summary>
+        /// 用户
+        /// </summary>
+        /// <returns></returns>
+        public static IUserDAL UserFactory()
+        {
+            return new UserDAL();
+        }
+
+        /// <summary>
+        /// 客户
+        /// </summary>
+        /// <returns></returns>
+        public static ICustomerDAL CustomerFactory()
+        {
+            return new CustomerDAL();
+        }
     }
 }

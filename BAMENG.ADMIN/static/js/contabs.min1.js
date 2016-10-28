@@ -65,7 +65,7 @@ function n() {
     }), n) {
         var s = '<a href="javascript:;" class="active J_menuTab" data-id="' + t + '">' + i + ' <i class="fa fa-times-circle"></i></a>';
         $(".J_menuTab").removeClass("active");
-        var r = '<iframe class="J_iframe" name="iframe' + a + '" width="100%" height="100%" src="' + t + '?v=4.0" frameborder="0" data-id="' + t + '" seamless></iframe>';
+        var r = '<iframe class="J_iframe" name="iframe' + a + '" width="100%" height="100%" src="' + t + '" frameborder="0" data-id="' + t + '" seamless></iframe>';
         $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(r);
         var o = layer.load();
         $(".J_mainContent iframe:visible").load(function () {

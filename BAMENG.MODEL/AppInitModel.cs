@@ -29,7 +29,7 @@ namespace BAMENG.MODEL
         /// <summary>
         /// 用户数据
         /// </summary>
-        public AppUserModel userData { get; set; }
+        public UserModel userData { get; set; }
         /// <summary>
         /// 版本信息
         /// </summary>

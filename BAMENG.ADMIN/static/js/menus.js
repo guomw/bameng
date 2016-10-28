@@ -1,4 +1,5 @@
-﻿/// <reference path="jquery.min.js" />
+﻿/// <reference path="demoLeftData.js" />
+/// <reference path="jquery.min.js" />
 /// <reference path="plugins/hot/Jquery.util.js" />
 /// <reference path="plugins/metisMenu/jquery.metisMenu.js" />
 /*
@@ -34,30 +35,7 @@ $(function () {
 
     //默认菜单，如果没有设置菜单的话，则显示默认菜单index_v1.html
     function defaultMenus() {
-        menuListProvider.menuList.push({
-            ItemCode: "01",
-            ItemNavLabel: "首页",
-            ItemUrl: "index_v1.html",
-            ItemParentCode: "0",
-            ItemShow: 1,
-            ItemIcons: "fa-home"
-        });
-        menuListProvider.menuList.push({
-            ItemCode: "02",
-            ItemNavLabel: "总店管理",
-            ItemUrl: "admin/shop/shoplist.html",
-            ItemParentCode: "0",
-            ItemShow: 1,
-            ItemIcons: "fa-home"
-        });
-        menuListProvider.menuList.push({
-            ItemCode: "0201",
-            ItemNavLabel: "总店列表",
-            ItemUrl: "admin/shop/shoplist.html",
-            ItemParentCode: "02",
-            ItemShow: 1,
-            ItemIcons: ""
-        });
+        menuListProvider.menuList = getDemoData();
     }
 
 

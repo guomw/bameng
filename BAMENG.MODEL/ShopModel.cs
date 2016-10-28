@@ -19,7 +19,7 @@ namespace BAMENG.MODEL
     {
         public int ShopID { get; set; }
 
-        public int ShopName { get; set; }
+        public string ShopName { get; set; }
         /// <summary>
         /// 门店类型1 总店 0分店
         /// </summary>
@@ -28,26 +28,26 @@ namespace BAMENG.MODEL
         /// 门店所属总店ID，门店类型为总店时，此值0
         /// </summary>
         public int ShopBelongId { get; set; }
-        public int ShopProv { get; set; }
-        public int ShopCity { get; set; }
-        public int ShopArea { get; set; }
+        public string ShopProv { get; set; }
+        public string ShopCity { get; set; }
+        public string ShopArea { get; set; }
         /// <summary>
         /// 店铺地址
         /// </summary>
-        public int ShopAddress { get; set; }
+        public string ShopAddress { get; set; }
         /// <summary>
         /// 联系人
         /// </summary>
-        public int Contacts { get; set; }
+        public string Contacts { get; set; }
         /// <summary>
         /// 联系方式
         /// </summary>
-        public int ContactWay { get; set; }
-        public int LoginName { get; set; }
+        public string ContactWay { get; set; }
+        public string LoginName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public int LoginPassword { get; set; }
+        public string LoginPassword { get; set; }
         /// <summary>
         /// 1活动 0结束
         /// </summary>
@@ -55,6 +55,6 @@ namespace BAMENG.MODEL
         /// <summary>
         /// 创建时间
         /// </summary>
-        public int CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

@@ -26,5 +26,32 @@ namespace BAMENG.IDAL
         /// <param name="model"></param>
         /// <returns></returns>
         ResultPageModel GetShopList(int ShopType, int ShopBelongId, SearchModel model);
+
+        /// <summary>
+        /// 更新门店信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        bool UpdateShopInfo(ShopModel model);
+        /// <summary>
+        /// 添加门店
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        int AddShopInfo(ShopModel model);
+
+        /// <summary>
+        /// 冻结/解冻门店
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        bool UpdateShopActive(int shopId, int active);
+        /// <summary>
+        /// 删除门店
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        bool DeleltShopInfo(int shopId);
     }
 }

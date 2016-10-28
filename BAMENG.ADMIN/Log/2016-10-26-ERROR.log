@@ -84,3 +84,15 @@
    在 BAMENG.LOGIC.ShopLogic.GetShopList(Int32 ShopType, Int32 ShopBelongId, SearchModel model) 位置 J:\HOT\CODE\BAMENG\BAMENG.LOGIC\ShopLogic.cs:行号 32
    在 BAMENG.ADMIN.handler.HQ.DoRequest(HttpContext context) 位置 J:\HOT\CODE\BAMENG\BAMENG.ADMIN\handler\HQ.ashx.cs:行号 69
    在 BAMENG.ADMIN.handler.HQ.ProcessRequest(HttpContext context) 位置 J:\HOT\CODE\BAMENG\BAMENG.ADMIN\handler\HQ.ashx.cs:行号 32 Message:类型“System.String”的对象无法转换为类型“System.Int32”。
+2016/10/26 17:22:07,107 ERROR http://bmadmin.fancat.cn/handler/HQ.ashx header:Connection=keep-alive&Content-Length=41&Content-Type=application%2fx-www-form-urlencoded%3b+charset%3dUTF-8&Accept=application%2fjson%2c+text%2fjavascript%2c+*%2f*%3b+q%3d0.01&Accept-Encoding=gzip%2c+deflate&Accept-Language=zh-CN%2czh%3bq%3d0.8&Host=bmadmin.fancat.cn&Referer=http%3a%2f%2fbmadmin.fancat.cn%2fadmin%2fshop%2fshoplist.html%3fv%3d4.0&User-Agent=Mozilla%2f5.0+(Windows+NT+6.1%3b+WOW64)+AppleWebKit%2f537.36+(KHTML%2c+like+Gecko)+Chrome%2f50.0.2661.102+Safari%2f537.36&Origin=http%3a%2f%2fbmadmin.fancat.cn&X-Requested-With=XMLHttpRequest Form:action=getshoplist&pageIndex=&pageSize=20 UserAgent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36 IP:127.0.0.1;referrer:http://bmadmin.fancat.cn/admin/shop/shoplist.html?v=4.0 StackTrace:   在 System.RuntimeType.TryChangeType(Object value, Binder binder, CultureInfo culture, Boolean needsSpecialCast)
+   在 System.RuntimeType.CheckValue(Object value, Binder binder, CultureInfo culture, BindingFlags invokeAttr)
+   在 System.Reflection.MethodBase.CheckArguments(Object[] parameters, Binder binder, BindingFlags invokeAttr, CultureInfo culture, Signature sig)
+   在 System.Reflection.RuntimeMethodInfo.InvokeArgumentsCheck(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   在 System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   在 System.Reflection.RuntimePropertyInfo.SetValue(Object obj, Object value, Object[] index)
+   在 HotCoreUtils.DB.DbHelperSQLP.GetEntityList[T](IDataReader dr)
+   在 BAMENG.DAL.AbstractDAL.getPageData[T](Int32 PageSize, Int32 PageIndex, String strSql, String orderbyField, SqlParameter[] commandParameters) 位置 J:\HOT\CODE\bameng\BAMENG.DAL\AbstractDAL.cs:行号 135
+   在 BAMENG.DAL.ShopDAL.GetShopList(Int32 ShopType, Int32 ShopBelongId, SearchModel model) 位置 J:\HOT\CODE\bameng\BAMENG.DAL\ShopDAL.cs:行号 66
+   在 BAMENG.LOGIC.ShopLogic.GetShopList(Int32 ShopType, Int32 ShopBelongId, SearchModel model) 位置 J:\HOT\CODE\bameng\BAMENG.LOGIC\ShopLogic.cs:行号 32
+   在 BAMENG.ADMIN.handler.HQ.DoRequest(HttpContext context) 位置 J:\HOT\CODE\bameng\BAMENG.ADMIN\handler\HQ.ashx.cs:行号 69
+   在 BAMENG.ADMIN.handler.HQ.ProcessRequest(HttpContext context) 位置 J:\HOT\CODE\bameng\BAMENG.ADMIN\handler\HQ.ashx.cs:行号 32 Message:类型“System.String”的对象无法转换为类型“System.Int32”。

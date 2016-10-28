@@ -43,7 +43,7 @@ namespace BAMENG.LOGIC
 
             data.versionData = CheckUpdate(clientVersion, "android");
 
-            data.userData = new AppUserModel();
+            data.userData = new UserModel();
 
 
             data.baseData.about = "http://wwww.xx.com/about.html";

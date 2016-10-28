@@ -241,5 +241,14 @@ namespace BAMENG.MODEL
         /// 时间类型
         /// </summary>
         public int timeType { get; set; }
+
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string province { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string city { get; set; }
     }
 }

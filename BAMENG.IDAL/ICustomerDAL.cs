@@ -6,20 +6,22 @@
     2013-$today.year. All rights reserved.
 **/
 
-
+using BAMENG.MODEL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAMENG.MODEL
+namespace BAMENG.IDAL
 {
-    public class AppUserModel
+    public interface ICustomerDAL : IDisposable
     {
-        public string loginName { get; set; }
-
-        public string mobile { get; set; }
-                
+        /// <summary>
+        /// 根据用户ID，获取客户列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ResultPageModel GetCustomerListByUserId(SearchModel model);
     }
 }

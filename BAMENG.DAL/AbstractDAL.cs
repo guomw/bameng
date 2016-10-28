@@ -23,6 +23,8 @@ namespace BAMENG.DAL
     public class AbstractDAL : IDisposable
     {
 
+
+
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
 
@@ -87,7 +89,7 @@ namespace BAMENG.DAL
         /// <returns></returns>
         public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, SqlParameter[] commandParameters, Action<List<T>> callback) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, "su.CreateTime");
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();
@@ -160,7 +162,7 @@ namespace BAMENG.DAL
         /// <returns></returns>
         public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField, Action<List<T>> callback) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, "su.CreateTime");
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();
@@ -196,7 +198,7 @@ namespace BAMENG.DAL
         /// <returns></returns>
         public ResultPageModel getPageData<T>(int PageSize, int PageIndex, string strSql, string orderbyField) where T : new()
         {
-            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, "su.CreateTime");
+            string querySql = DbHelperSQLP.buildPageSql(PageIndex, PageSize, strSql, orderbyField);
             string recordCountSql = DbHelperSQLP.buildRecordCountSql(strSql);
 
             ResultPageModel result = new ResultPageModel();

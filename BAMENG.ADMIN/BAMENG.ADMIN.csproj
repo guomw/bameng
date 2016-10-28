@@ -97,7 +97,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="admin\shop\shoplist.html" />
+    <Content Include="admin\shoplist.html" />
+    <Content Include="admin\userdetails.html" />
+    <Content Include="admin\allyuserlist.html" />
+    <Content Include="admin\userlist.html" />
+    <Content Include="index.html" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -108,6 +112,12 @@
     <Content Include="static\fonts\fontawesome-webfont.eot_" />
     <Content Include="static\fonts\glyphicons-halflings-regular.eot_" />
     <Content Include="static\js\.DS_Store" />
+    <Content Include="static\js\admin\userdetails.js" />
+    <Content Include="static\js\admin\userlist.js" />
+    <Content Include="static\js\demoLeftData.js" />
+    <Content Include="static\js\plugins\CtiyPicker\css\cityPicker.css" />
+    <Content Include="static\js\plugins\CtiyPicker\js\cityList.js" />
+    <Content Include="static\js\plugins\CtiyPicker\js\cityPicker.js" />
     <Content Include="static\js\plugins\hot\Jquery.util.js" />
     <Content Include="static\js\plugins\jqgrid\i18n\grid.locale-cn.js_0820" />
     <Content Include="static\js\plugins\jqgrid\jquery.jqGrid.min.js_0820" />
@@ -126,7 +136,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html" />
+    <Content Include="main.html" />
     <Content Include="home.html" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
@@ -491,7 +501,7 @@
     <Content Include="static\js\plugins\validate\jquery.validate.min.js" />
     <Content Include="static\js\plugins\validate\messages_zh.min.js" />
     <Content Include="static\js\plugins\webuploader\webuploader.min.js" />
-    <Content Include="static\js\shop\shoplist.js" />
+    <Content Include="static\js\admin\shoplist.js" />
     <Content Include="static\js\welcome.min.js" />
     <Content Include="static\plugins\fullavatareditor\scripts\fullAvatarEditor.js" />
     <Content Include="static\plugins\fullavatareditor\scripts\jQuery.Cookie.js" />

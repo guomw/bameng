@@ -72,10 +72,28 @@ namespace BAMENG.CONFIG
         /// </summary>
         [Description("成功")]
         OK = 200,
+
+        [Description("更新失败")]
+        更新失败 = 6001,
+        [Description("操作失败")]
+        操作失败 = 6002,
+        [Description("删除失败")]
+        删除失败 = 6003,
+        [Description("添加失败")]
+        添加失败 = 6004,
     }
 
 
-
+    /// <summary>
+    /// 搜索类型
+    /// </summary>
+    public enum SearchType
+    {
+        姓名 = 1,
+        昵称 = 2,
+        手机 = 3,
+        门店 = 4,
+    }
 
 
     public enum OSOptions

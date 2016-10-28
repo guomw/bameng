@@ -9,9 +9,6 @@
 function goTo(pageNo, callback) {
     callback(pageNo);
 }
-
-
-
 $.extend({});
 
 $.fn.extend({
@@ -51,8 +48,6 @@ $.fn.extend({
 var hotUtil = hotUtil || {};
 
 $.extend(hotUtil, {
-    ajaxUrl: "/Api/handler.ashx",
-
     GetCookie: function (name) {
         var r = new RegExp('(^|;|\\s+)' + name + '=([^;]*)(;|$)');
         var m = document.cookie.match(r);
@@ -97,11 +92,11 @@ $.extend(hotUtil, {
         else
             return true;
     },
-    /*
-    * @brief 地址跳转        
-    */
-    refreshPage: function (page) {        
-        window.location.href = window.location.pathname + "?page=" + page;
+    newTab: function (url, name) {
+        if (name.length > 25) {
+            name = name.substring(0, 25) + "...";
+        }
+        parent.newTab(url, name);
     },
     /*
      * @brief 跳转登录页面
@@ -195,75 +190,16 @@ $.extend(hotUtil, {
         $.ajax(op);
     },
     /*
-     * @brief 验证输入框格式 
-     * @param obj 表单文本框样式
-     */
-    validateInput: function (obj) {
-        var isPass = true;
-        var self = this;
-        $("." + obj).each(function (idx, element) {
-            var textType = $(element).attr("data-type");//文本验证类型
-            var textTip = $(element).attr("data-tip");//错误提示
-            var text = $(element).val();//文本内容
-            switch (textType) {
-                case "float":
-                    if (!self.isFloat(text) || text.length == 0) {
-                        isPass = false;
-                        if (typeof textTip == 'undefined' || textTip == null || textTip.length == 0)
-                            $.alert('格式不正确');
-                        else
-                            $.alert(textTip);
-
-                        $(element).focus();
-                    }
-                    break;
-                case "number":
-                    if (!self.isInt(text) || text.length == 0) {
-                        isPass = false;
-                        if (typeof textTip == 'undefined' || textTip == null || textTip.length == 0)
-                            $.alert('格式不正确');
-                        else
-                            $.alert(textTip);
-                        $(element).focus();
-                    }
-                    break;
-                case "mobile":
-                    if (!self.isMobile(text) || text.length == 0) {
-                        isPass = false;
-                        if (typeof textTip == 'undefined' || textTip == null || textTip.length == 0)
-                            $.alert('格式不正确');
-                        else
-                            $.alert(textTip);
-                        $(element).focus();
-                    }
-                    break;
-                case "string":
-                    if (text.length == 0) {
-                        isPass = false;
-                        if (typeof textTip == 'undefined' || textTip == null || textTip.length == 0)
-                            $.alert('内容不能为空');
-                        else
-                            $.alert(textTip);
-                        $(element).focus();
-                    }
-                    break;
-            }
-            if (!isPass)
-                return false;
-        });
-        return isPass;
-    },
-    /*
      * @brief 序列化表单
      * @param obj 序列化对象
      */
     serializeForm: function (obj) {
         var data = {};
-        $("." + obj).each(function (idx, element) {
+        $(obj).each(function (idx, element) {
             data[element.id] = $(element).val();
         });
         return data;
-    },    
+    },
     /*
      * @brief 手机或身份证号部分隐藏
      * @param value 值
@@ -349,15 +285,30 @@ $.extend(hotUtil, {
             }, 1000)
         }
     },
-    paging: function (loadObj, pageNo, totalPages, btnCount) {
+    /*
+     * @brief 分页函数
+     * @param loadObj 操作对象
+     * @param pageNo 当前页
+     * @param pageSize 每页数量
+     * @param totalPages 总页数
+     * @param recordCount 总数
+     * @param btnCount 按钮数量
+    */
+    paging: function (loadObj, pageNo, pageSize, totalPages, recordCount, btnCount) {
         this.currentBtnPage = 0;
         this.obj = $(loadObj);
         this.pageNo = pageNo;
         this.totalPages = totalPages;
-        this.btnCount = btnCount;
+        this.btnCount = btnCount || 7;
+
+        $(loadObj + "_pageIndex").text(pageNo);
+        $(loadObj + "_recordCount").text(recordCount);
+        $(loadObj + "_pageCount").text(totalPages == 0 ? 1 : totalPages);
+        $(loadObj + "_pageSize").text(pageSize);
+
 
         this.init = function (callback) {
-            if (this.obj) {
+            if (this.obj && recordCount > 0) {
                 this.obj.html('');
                 if (this.totalRecords == 0) {
                     this.obj.html('');
