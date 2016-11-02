@@ -545,6 +545,7 @@ namespace BAMENG.DAL
             //生成sql语句
             return getPageData<UserModel>(model.PageSize, model.PageIndex, strSql, "ue.CreateTime", param, (items) =>
             {
+                //TODO:暂时写死
                 items.ForEach((item) =>
                 {
                     item.CustomerAmount = 100;
@@ -718,6 +719,55 @@ namespace BAMENG.DAL
             };
             return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm));
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="loginPassword"></param>
+        /// <param name="IsShop">是否是门店登录</param>
+        /// <returns></returns>
+        public AdminLoginModel Login(string loginName, string loginPassword, bool IsShop)
+        {
+            string strSql = string.Empty;
+            if (!IsShop)
+                strSql = "select ID,LoginName,LoginPassword,RoleId,UserName,UserMobile,UserStatus,UserEmail,LastLoginTime,CreateTime,0 as UserIndentity from BM_Manager where LoginName=@LoginName and LoginPassword=@LoginPassword";
+            else
+                strSql = "select ShopID as ID,LoginName,LoginPassword,0 as ReloId,ShopName as UserName,ContactWay as UserMobile,IsActive as UserStatus,'' as UserEmail ,CreateTime,ShopType as UserIndentity from BM_ShopManage where LoginName =@LoginName and LoginPassword =@LoginPassword";
+            SqlParameter[] parm = {
+                   new SqlParameter("@LoginName", loginName),
+                   new SqlParameter("@LoginPassword", loginPassword)
+            };
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, parm))
+            {
+                return DbHelperSQLP.GetEntity<AdminLoginModel>(dr);
+            }
+        }
+
+
 
 
     }

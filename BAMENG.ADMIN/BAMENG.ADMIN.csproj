@@ -97,6 +97,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="admin\articleedit.html" />
     <Content Include="admin\articlelist.html" />
     <Content Include="admin\shoplist.html" />
     <Content Include="admin\userdetails.html" />
@@ -113,6 +114,9 @@
     <Content Include="static\fonts\fontawesome-webfont.eot_" />
     <Content Include="static\fonts\glyphicons-halflings-regular.eot_" />
     <Content Include="static\js\.DS_Store" />
+    <Content Include="static\js\admin\articleedit.js" />
+    <Content Include="static\js\admin\articlelist.js" />
+    <Content Include="static\js\admin\Login.js" />
     <Content Include="static\js\admin\userdetails.js" />
     <Content Include="static\js\admin\userlevel.js" />
     <Content Include="static\js\admin\userlist.js" />
@@ -120,6 +124,7 @@
     <Content Include="static\js\plugins\CtiyPicker\css\cityPicker.css" />
     <Content Include="static\js\plugins\CtiyPicker\js\cityList.js" />
     <Content Include="static\js\plugins\CtiyPicker\js\cityPicker.js" />
+    <Content Include="static\js\plugins\hot\bootstrap.hot.extra-validate.js" />
     <Content Include="static\js\plugins\hot\Jquery.util.js" />
     <Content Include="static\js\plugins\jqgrid\i18n\grid.locale-cn.js_0820" />
     <Content Include="static\js\plugins\jqgrid\jquery.jqGrid.min.js_0820" />
@@ -130,6 +135,7 @@
     <Content Include="handler\HQ.ashx" />
     <Content Include="handler\Login.ashx" />
     <Content Include="handler\Logout.ashx" />
+    <Content Include="handler\UploadFileEidt.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -518,9 +524,14 @@
     </Compile>
     <Compile Include="handler\Login.ashx.cs">
       <DependentUpon>Login.ashx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="handler\Logout.ashx.cs">
       <DependentUpon>Logout.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handler\UploadFileEidt.ashx.cs">
+      <DependentUpon>UploadFileEidt.ashx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

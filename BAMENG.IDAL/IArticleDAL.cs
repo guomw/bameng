@@ -29,6 +29,13 @@ namespace BAMENG.IDAL
         ResultPageModel GetArticleList(int AuthorId, int AuthorIdentity, SearchModel model);
 
         /// <summary>
+        /// 获取资讯信息
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
+        ArticleModel GetModel(int articleId);
+
+        /// <summary>
         /// 添加资讯
         /// </summary>
         /// <param name="model"></param>

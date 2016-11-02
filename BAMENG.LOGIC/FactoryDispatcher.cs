@@ -57,5 +57,15 @@ namespace BAMENG.LOGIC
         {
             return new ArticleDAL();
         }
+
+
+        /// <summary>
+        /// 系统
+        /// </summary>
+        /// <returns></returns>
+        public static ISystemDAL SystemFactory()
+        {
+            return new SystemDAL();
+        }
     }
 }

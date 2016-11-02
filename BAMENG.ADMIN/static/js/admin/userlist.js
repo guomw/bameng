@@ -159,7 +159,7 @@ var userHelper = {
             this.reset.resetForm();
         var data = this.getModel(dataId);
         if (data != null) {
-            $("#modal-title").text("编辑"+(this.isAlly==1?"盟友信息":"盟主信息"));
+            $("#modal-title").text("编辑" + (this.isAlly == 1 ? "盟友信息" : "盟主信息"));
             $("#userid").val(dataId);
             $("#username").val(data.RealName);
             $("#usernickname").val(data.NickName);
@@ -188,7 +188,7 @@ var userHelper = {
     },
     validate: function () {
         var e = "<i class='fa fa-times-circle'></i> ";
-        this.reset=$("#signupForm").validate({
+        this.reset = $("#signupForm").validate({
             rules: {
                 username: {
                     required: !0,
@@ -210,7 +210,7 @@ var userHelper = {
             },
             messages: {
                 username: {
-                    required: e + "请输入"+(userHelper.isAlly==1?"盟友":"盟主")+"名称",
+                    required: e + "请输入" + (userHelper.isAlly == 1 ? "盟友" : "盟主") + "名称",
                     minlength: e + "联系人必须两个字符以上"
                 },
                 usermobile: e + "请输入您的手机号码",

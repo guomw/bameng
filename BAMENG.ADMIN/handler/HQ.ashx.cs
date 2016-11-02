@@ -14,11 +14,11 @@ namespace BAMENG.ADMIN.handler
     /// <summary>
     /// HQ--总部
     /// </summary>
-    public class HQ : PageBaseHelper, IHttpHandler
+    public class HQ : BaseLogicFactory, IHttpHandler
     {
+        public AdminLoginModel user { get; set; }
         public new void ProcessRequest(HttpContext context)
         {
-
             string resultMsg = string.Format(@"{0} header:{1} Form:{2} UserAgent:{3} IP:{4};referrer:{5}"
                   , context.Request.Url.ToString()
                   , context.Request.Headers.ToString()
@@ -67,8 +67,18 @@ namespace BAMENG.ADMIN.handler
 
         public string json { get; set; }
 
+
+
         private void DoRequest(HttpContext context)
         {
+            user = GetCurrentUser();
+            if (user == null)
+            {
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.没有登录));
+                context.Response.ContentType = "application/json";
+                context.Response.Write(json);
+                return;
+            }
             //全部转换为大写
             try
             {
@@ -119,6 +129,21 @@ namespace BAMENG.ADMIN.handler
                     case "EDITLEVEL":
                         EditLevel();
                         break;
+                    case "GETARTICLELIST":
+                        GetArticleList();
+                        break;
+                    case "GETARTICLEINFO":
+                        GetArticleInfo();
+                        break;
+                    case "UPDATEARTICLECODE":
+                        UpdateArticleCode();
+                        break;
+                    case "EDITARTICLE":
+                        EditArticle();
+                        break;
+                    case "GETMENULIST":
+                        GetMenuList();
+                        break;
                     default:
                         break;
                 }
@@ -146,8 +171,8 @@ namespace BAMENG.ADMIN.handler
             {
                 PageIndex = Convert.ToInt32(GetFormValue("pageIndex", 1)),
                 PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
-                startTime = "",
-                endTime = "",
+                startTime = GetFormValue("startTime", ""),
+                endTime = GetFormValue("endTime", ""),
                 key = GetFormValue("key", ""),
                 city = GetFormValue("city", ""),
                 province = GetFormValue("prov", "")
@@ -219,12 +244,13 @@ namespace BAMENG.ADMIN.handler
             {
                 PageIndex = Convert.ToInt32(GetFormValue("pageIndex", 1)),
                 PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
-                startTime = "",
-                endTime = "",
+                startTime = GetFormValue("startTime", ""),
+                endTime = GetFormValue("endTime", ""),
                 key = GetFormValue("key", ""),
                 searchType = GetFormValue("searchType", 0)
             };
-            var data = UserLogic.GetUserList(0, GetFormValue("ally", 1), model);
+            int currentUserId = user.UserIndentity != 0 ? user.ID : 0;
+            var data = UserLogic.GetUserList(currentUserId, GetFormValue("ally", 1), model);
             json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
         }
 
@@ -233,7 +259,7 @@ namespace BAMENG.ADMIN.handler
         /// </summary>
         private void EditUser()
         {
-            //TODO:方便测试，此处门店ID写死，真实逻辑是，根据当前登录的门店账户，获取门店ID
+            //方便测试，此处门店ID写死，真实逻辑是，根据当前登录的门店账户，获取门店ID
             bool flag = UserLogic.EditUserInfo(new UserRegisterModel()
             {
                 loginName = GetFormValue("userloginname", ""),
@@ -242,8 +268,8 @@ namespace BAMENG.ADMIN.handler
                 loginPassword = GetFormValue("password", ""),
                 mobile = GetFormValue("usermobile", ""),
                 storeId = ConstConfig.storeId,
-                ShopId = 1,
-                UserIdentity = 1,
+                ShopId = user.ID,
+                UserIdentity = user.UserIndentity,
                 UserId = UserId
             });
             if (flag)
@@ -344,6 +370,114 @@ namespace BAMENG.ADMIN.handler
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
             else
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
+        }
+
+
+        /// <summary>
+        /// 获取资讯列表
+        /// </summary>
+        public void GetArticleList()
+        {
+
+
+            SearchModel model = new SearchModel()
+            {
+                PageIndex = Convert.ToInt32(GetFormValue("pageIndex", 1)),
+                PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
+                startTime = GetFormValue("startTime", ""),
+                endTime = GetFormValue("endTime", ""),
+                key = GetFormValue("key", ""),
+                searchType = GetFormValue("searchType", 0),
+            };
+
+            //作者身份类型，0集团，1总店，2分店  3盟主 4盟友
+            //AuthorIdentity 根据作者ID来判断作者身份           
+
+            int AuthorIdentity = user.UserIndentity;
+            int AuthorId = user.ID;
+            var data = ArticleLogic.GetArticleList(AuthorId, AuthorIdentity, model);
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+        /// <summary>
+        /// 获取资讯信息
+        /// </summary>
+        public void GetArticleInfo()
+        {
+            int articleId = GetFormValue("articleId", 0);
+            var data = ArticleLogic.GetModel(articleId);
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+
+
+        /// <summary>
+        /// 修改状态
+        /// </summary>
+        private void UpdateArticleCode()
+        {
+            int articleId = GetFormValue("articleId", 0);
+            int type = GetFormValue("type", 0);//1修改置顶，2修改发布，3，删除
+            int active = GetFormValue("active", 0);
+
+            bool flag = false;
+            if (type == 1)//置顶
+                flag = ArticleLogic.SetArticleEnableTop(articleId, active == 1);
+            else if (type == 2)//发布
+                flag = ArticleLogic.SetArticleEnablePublish(articleId, active == 1);
+            else if (type == 3)//删除
+                flag = ArticleLogic.DeleteArticle(articleId);
+
+
+            if (flag)
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.更新失败));
+        }
+        /// <summary>
+        /// 编辑资讯
+        /// </summary>
+        private void EditArticle()
+        {
+            //方便测试，此处门店ID写死，真实逻辑是，根据当前登录的门店账户，获取门店ID
+            bool flag = ArticleLogic.EditArticle(new ArticleModel()
+            {
+                ArticleId = GetFormValue("articleid", 0),
+                ArticleIntro = HttpUtility.UrlDecode(GetFormValue("intro", "")),
+                ArticleTitle = HttpUtility.UrlDecode(GetFormValue("title", "")),
+                EnableTop = GetFormValue("top", 0),
+                EnablePublish = GetFormValue("publish", 0),
+                ArticleCover = GetFormValue("cover", ""),
+                ArticleBody = HttpUtility.UrlDecode(GetFormValue("content", "")),
+                SendTargetId = GetFormValue("targetid", 0),
+                ArticleSort = 0,
+                ArticleStatus = 1,
+                AuthorName = user.UserName,
+                AuthorId = user.ID,
+                AuthorIdentity = user.UserIndentity,
+                PublishTime = DateTime.Now,
+                TopTime = DateTime.Now
+            });
+            if (flag)
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ShopID > 0 ? ApiStatusCode.更新失败 : ApiStatusCode.添加失败));
+        }
+
+
+
+        /// <summary>
+        /// 获取菜单
+        /// </summary>
+        private void GetMenuList()
+        {
+            ApiStatusCode appCode = ApiStatusCode.OK;
+            SystemLeftModel resultData = new SystemLeftModel();
+            if (CheckLogin(ref appCode))
+            {
+                resultData.menuData = SystemLogic.GetMenuList(user.UserIndentity);
+                resultData.userData = user;
+                resultData.authority = "";
+            }
+            json = JsonHelper.JsonSerializer(new ResultModel(appCode, resultData));
         }
     }
 }

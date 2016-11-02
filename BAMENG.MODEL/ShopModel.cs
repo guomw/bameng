@@ -21,7 +21,7 @@ namespace BAMENG.MODEL
 
         public string ShopName { get; set; }
         /// <summary>
-        /// 门店类型1 总店 0分店
+        /// 门店类型1 总店 2分店
         /// </summary>
         public int ShopType { get; set; }
         /// <summary>

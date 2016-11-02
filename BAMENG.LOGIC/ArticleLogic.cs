@@ -8,6 +8,7 @@
 **/
 
 
+using BAMENG.MODEL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,90 @@ using System.Threading.Tasks;
 
 namespace BAMENG.LOGIC
 {
-    class ArticleLogic
+    public class ArticleLogic
     {
+        /// <summary>
+        /// 获取资讯列表
+        /// </summary>
+        /// <param name="AuthorId"></param>
+        /// <param name="AuthorIdentity">作者身份类型，0集团，1总店，2分店  3盟主 4盟友</param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static ResultPageModel GetArticleList(int AuthorId, int AuthorIdentity, SearchModel model)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.GetArticleList(AuthorId, AuthorIdentity, model);
+            }
+        }
+
+        /// <summary>
+        /// 编辑资讯信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool EditArticle(ArticleModel model)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                if (model.ArticleId > 0)
+                    return dal.UpdateArticle(model);
+                else
+                    return dal.AddArticle(model) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 设置资讯置顶状态
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <param name="enable"></param>
+        /// <returns></returns>
+        public static bool SetArticleEnableTop(int articleId, bool enable)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.SetArticleEnableTop(articleId, enable);
+            }
+        }
+        /// <summary>
+        /// 设置资讯发布状态
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <param name="enable"></param>
+        /// <returns></returns>
+        public static bool SetArticleEnablePublish(int articleId, bool enable)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.SetArticleEnablePublish(articleId, enable);
+            }
+        }
+        /// <summary>
+        /// 删除资讯
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
+        public static bool DeleteArticle(int articleId)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.DeleteArticle(articleId);
+            }
+        }
+        /// <summary>
+        /// 获取资讯信息
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
+        public static ArticleModel GetModel(int articleId)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.GetModel(articleId);
+            }
+        }
+
+
     }
 }

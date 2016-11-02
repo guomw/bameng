@@ -129,5 +129,15 @@ namespace BAMENG.IDAL
         ///<param name="type">0盟友，1盟主</param>
         /// <returns></returns>
         ResultPageModel GetLevelList(int storeId, int type);
+
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="loginPassword"></param>
+        /// <param name="IsShop">是否是门店登录</param>
+        /// <returns></returns>
+        AdminLoginModel Login(string loginName, string loginPassword, bool IsShop);
     }
 }

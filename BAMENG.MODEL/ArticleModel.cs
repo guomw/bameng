@@ -106,6 +106,11 @@ namespace BAMENG.MODEL
         public DateTime TopTime { get; set; }
 
         /// <summary>
+        /// 修改时间
+        /// </summary>
+        public DateTime UpdateTime { get;set; }
+
+        /// <summary>
         /// 发布时间
         /// </summary>
         public DateTime PublishTime { get; set; }

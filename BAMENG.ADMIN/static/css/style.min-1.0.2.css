@@ -2960,7 +2960,7 @@ video {
 }
 
 .modal-dialog {
-    z-index: 1200;
+    z-index: 999999;
 }
 
 .modal-body {

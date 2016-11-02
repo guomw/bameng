@@ -1,6 +1,6 @@
-﻿/// <reference path="demoLeftData.js" />
+﻿/// <reference path="plugins/hot/Jquery.util.js" />
 /// <reference path="jquery.min.js" />
-/// <reference path="plugins/hot/Jquery.util.js" />
+/// <reference path="plugins/sweetalert/sweetalert.min.js" />
 /// <reference path="plugins/metisMenu/jquery.metisMenu.js" />
 /*
     版权所有:杭州火图科技有限公司
@@ -34,24 +34,44 @@ $(function () {
 
 
     //默认菜单，如果没有设置菜单的话，则显示默认菜单index_v1.html
-    function defaultMenus() {
-        menuListProvider.menuList = getDemoData();
-    }
+    //function defaultMenus() {
+    //    menuListProvider.menuList = getDemoData();
+    //}
 
 
     function LoadMenu() {
         if (menuListProvider.menuList == null || menuListProvider.menuList.length == 0) {
             //请求头
-            var header = {
-                action: "getleftmenu"
+            var postData = {
+                action: "GetMenuList"
             }
-            hotUtil.ajaxCall(hotUtil.ajaxUrl, null, function (ret, err) {
-                if (ret != null && ret.code == 200) {
-                    menuListProvider.menuList = ret.result;
+            hotUtil.ajaxCall("handler/HQ.ashx", postData, function (ret, err) {
+                if (ret != null) {
+                    if (ret.status == 200) {
+                        var userData = ret.data.userData;
+                        if (userData != null) {
+                            $(".loginname").text(userData.LoginName);
+                            $(".loginusername").text(userData.UserName)
+                            menuListProvider.menuList = ret.data.menuData;
+                            authority = ret.data.authority;
+                        }
+                    }
+                    else {
+                        if (ret.status == 70034) {                            
+                            swal({
+                                title: ret.statusText,
+                                text: "即将跳转登录页面.",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            setTimeout(function () {
+                                window.location.href = "/index.html";
+                            }, 2000);
+                        }
+                    }
                 }
-
                 outputFirst();
-            }, header);
+            });
         }
         else {
             outputFirst();
@@ -67,7 +87,7 @@ $(function () {
             tempHtml = tempHtml.replace("{menuName}", item.ItemNavLabel);
             tempHtml = tempHtml.replace("{linkUrl}", item.ItemUrl);
             tempHtml = tempHtml.replace("{icons}", item.ItemIcons);
-           
+
             var second = outputChild(item.ItemCode, 1);
             if (hotUtil.isNullOrEmpty(second)) {
                 tempHtml = tempHtml.replace("{menuItemClass}", "J_menuItem");
@@ -119,7 +139,59 @@ $(function () {
     }
 
 
-    defaultMenus();
+    //defaultMenus();
     LoadMenu();
 
 });
+
+
+
+
+function newTab(url, name) {
+    var index = false;
+    $(".page-tabs-content .J_menuTab").each(function () {
+        var dataId = $(this).attr("data-id");
+        if (dataId == url) {
+            index = true;
+            $(this).click();
+            return false;
+        }
+    })
+    if (!index) {
+        var s = '<a href="javascript:;" class="active J_menuTab" data-id="' + url + '">' + name + ' <i class="fa fa-times-circle"></i></a>';
+        $(".J_menuTab").removeClass("active");
+        var r = '<iframe class="J_iframe" width="100%" height="100%" src="' + url + '" frameborder="0" data-id="' + url + '" seamless></iframe>';
+        $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(r);
+        var o = layer.load();
+        $(".J_mainContent iframe:visible").load(function () {
+            layer.close(o)
+        }),
+        $(".J_menuTabs .page-tabs-content").append(s);
+    }
+}
+
+
+
+function Logout() {
+    swal({
+        title: "您确定要注销系统",
+        text: "",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+    }, function () {
+        hotUtil.ajaxCall("handler/logout.ashx", null, function (ret, err) {
+            if (ret != null) {
+                if (ret.status == 200) {
+                    window.location.href = "/index.html";
+                }
+                else {
+                    swal(ret.statusText, "", "warning");
+                }
+            }
+        });
+    });
+}

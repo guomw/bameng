@@ -107,6 +107,51 @@ $.extend(hotUtil, {
         else
             parent.window.location.href = "/login.html";
     },
+    tip: {
+        success: function (content, callback, time) {
+            var $msg = $('<div class="hottip-wrap"><div class="layui-layer layui-layer-dialog layui-layer-border layui-layer-msg layui-layer-hui layer-anim hottip-content" style="z-index: 99891018;top: 30%;position: relative;background-color: rgba(28, 175, 154, 0.8);"><div id="" class="layui-layer-content">' + content + '</div></div></div>');
+            layer.closeAll("loading");
+            $("body").append($msg);
+
+            if (typeof time == 'undefined') {
+                time = 1500;
+            }
+
+            setTimeout(function () {
+                $msg.remove();
+                if (typeof callback == 'function')
+                    callback();
+            }, time);
+        },
+        error: function (content, callback, time) {
+            if (typeof time == 'undefined') {
+                time = 3000;
+            }
+
+            layer.closeAll("loading");
+            var $msg = $('<div class="hottip-wrap"><div class="layui-layer layui-layer-dialog layui-layer-border layui-layer-msg layui-layer-hui layer-anim hottip-content" style="z-index: 99891018;top: 30%;position: relative;background-color: rgba(217, 82, 79, 0.8);"><div id="" class="layui-layer-content">' + content + '</div></div></div>');
+            $("body").append($msg);
+            setTimeout(function () {
+                $msg.remove();
+                if (typeof callback == 'function')
+                    callback();
+            }, time);
+        },
+        msg: function (content, callback, time) {
+            if (typeof time == 'undefined') {
+                time = 3000;
+            }
+
+            layer.closeAll("loading");
+            var $msg = $('<div class="hottip-wrap"><div class="layui-layer layui-layer-dialog layui-layer-border layui-layer-msg layui-layer-hui layer-anim hottip-content" style="z-index: 99891018;top: 30%;position: relative;"><div id="" class="layui-layer-content">' + content + '</div></div></div>');
+            $("body").append($msg);
+            setTimeout(function () {
+                $msg.remove();
+                if (typeof callback == 'function')
+                    callback();
+            }, time);
+        }
+    },
     loading: {
         show: function () {
             return layer.load()
@@ -348,6 +393,29 @@ $.extend(hotUtil, {
                 }
             }
         };
+    },
+    /*
+     * @brief 上传图片
+    */
+    uploadImg: function (btnFile, uploadPath, callback, data) {
+        var uploadUrl = '/handler/UploadFileEidt.ashx?uploadtype=1&userid=' + uploadPath + '';
+        $.ajaxFileUpload({
+            url: uploadUrl,
+            secureuri: false,//安全协议
+            fileElementId: btnFile,//id
+            dataType: 'json',
+            type: "get",
+            data: data,
+            error: function (data, status, e) {                
+            },
+            success: function (json) {                
+                if (json.success) {                    
+                    callback(json.fileUrl);
+                } else {
+                    callback(false);                    
+                }
+            }
+        });
     }
 });
 

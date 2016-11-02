@@ -175,5 +175,24 @@ namespace BAMENG.LOGIC
             }
         }
 
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="loginPassword"></param>
+        /// <param name="IsShop">是否是门店登录</param>
+        /// <returns></returns>
+        public static AdminLoginModel Login(string loginName, string loginPassword, bool IsShop)
+        {
+            using (var dal = FactoryDispatcher.UserFactory())
+            {
+                return dal.Login(loginName, loginPassword, IsShop);
+            }
+        }
+
+
+
+
     }
 }

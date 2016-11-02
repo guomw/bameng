@@ -81,6 +81,15 @@ namespace BAMENG.CONFIG
         删除失败 = 6003,
         [Description("添加失败")]
         添加失败 = 6004,
+
+        [Description("账户不存在")]
+        账户不存在 = 7001,
+        [Description("账户或密码不正确")]
+        账户密码不正确 = 7002,
+        [Description("账户已禁用")]
+        账户已禁用 = 7003,
+        [Description("用户信息丢失，请重新登录")]
+        没有登录 = 70034
     }
 
 
@@ -93,6 +102,7 @@ namespace BAMENG.CONFIG
         昵称 = 2,
         手机 = 3,
         门店 = 4,
+        标题 = 5,
     }
 
 

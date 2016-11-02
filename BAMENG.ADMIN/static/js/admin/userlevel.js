@@ -33,19 +33,17 @@ var levelHelper = {
                         if (type == 1)
                             self.loaclData.two = ret.data.Rows;
                         else
-                            self.loaclData.one = ret.data.Rows;
-                        var n = 1;
+                            self.loaclData.one = ret.data.Rows;                        
                         $.each(ret.data.Rows, function (i, item) {
                             var tempHtml = $("#templist").html();
                             tempHtml = tempHtml.replace("{LevelName}", item.UL_LevelName);
                             tempHtml = tempHtml.replace("{MemberNum}", item.UL_MemberNum);
                             tempHtml = tempHtml.replace(/{LevelId}/gm, item.UL_ID);
                             tempHtml = tempHtml.replace(/{type}/gm, item.UL_Type);
-                            tempHtml = tempHtml.replace("{Level}", n);
+                            tempHtml = tempHtml.replace("{Level}", i++);
                             tempHtml = tempHtml.replace("{WhereTitle}", type == 1 ? "盟友" : "成交订单");
                             tempHtml = tempHtml.replace("{unit}", type == 1 ? "人" : "次");
-                            listhtml += tempHtml;
-                            n++;
+                            listhtml += tempHtml;                            
                         });
                         if (type == 1)
                             $("#listMode").html(listhtml);

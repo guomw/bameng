@@ -715,4 +715,42 @@ namespace BAMENG.MODEL
         public decimal UL_Gold { get; set; }
 
     }
+
+
+
+
+    /// <summary>
+    /// 后台登录用户实体
+    /// </summary>
+    [Serializable]
+    public class AdminLoginModel
+    {
+        public int ID { get; set; }
+
+        public string LoginName { get; set; }
+
+        public string LoginPassword { get; set; }
+
+        public int RoleId { get; set; }
+
+        public string UserName { get; set; }
+
+        public string UserMobile { get; set; }
+
+        public int UserStatus { get; set; }
+
+
+        public string UserEmail { get; set; }
+
+
+        public DateTime LastLoginTime { get; set; }
+
+
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 0集团，1总店，2分店
+        /// </summary>
+        public int UserIndentity { get; set; }
+    }
 }
