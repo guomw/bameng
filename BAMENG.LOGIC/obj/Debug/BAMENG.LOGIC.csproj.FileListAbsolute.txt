@@ -1,0 +1,15 @@
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.LOGIC.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.LOGIC.pdb
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.CONFIG.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.DAL.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.IDAL.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.MODEL.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\HotCoreUtils.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.CONFIG.pdb
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.DAL.pdb
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.IDAL.pdb
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\BAMENG.MODEL.pdb
+J:\HOT\CODE\bameng\BAMENG.LOGIC\bin\Debug\HotCoreUtils.xml
+J:\HOT\CODE\bameng\BAMENG.LOGIC\obj\Debug\BAMENG.LOGIC.csprojResolveAssemblyReference.cache
+J:\HOT\CODE\bameng\BAMENG.LOGIC\obj\Debug\BAMENG.LOGIC.dll
+J:\HOT\CODE\bameng\BAMENG.LOGIC\obj\Debug\BAMENG.LOGIC.pdb

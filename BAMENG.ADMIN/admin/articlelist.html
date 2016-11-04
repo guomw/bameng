@@ -47,9 +47,9 @@
                     <div class="ibox-content p-xxs no-top-border">
                         <div class="panel-body">
                             <div style="text-align:right;">
-                                <button type="button" class="btn btn-w-m btn-success" onclick="articleHelper.edit(0)">添加资讯</button>
+                                <button type="button" class="btn btn-w-m btn-success" id="btnAddArticle" onclick="articleHelper.edit(0)">添加资讯</button>
                             </div>
-                            <table class="table table-bordered table-hover table-center">
+                            <table class="table table-bordered table-hover table-center" id="articleSuccess">
                                 <thead>
                                     <tr>
                                         <th>序号</th>
@@ -64,6 +64,22 @@
                                 </thead>
                                 <tbody id="listMode"></tbody>
                             </table>
+
+                            <table class="table table-bordered table-hover table-center" id="applyArticle" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>资讯标题</th>                                        
+                                        <th>申请门店</th>
+                                        <th>申请时间</th>
+                                        <th>显示对象</th>
+                                        <th>审核状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listMode2"></tbody>
+                            </table>
+
                             <p style="float: left; margin: 20px 0;">共<span class="pagination_recordCount">0</span>条记录，当前第<span class="pagination_pageIndex">1</span> /<span class="pagination_pageCount">1</span>，每页<span class="pagination_pageSize">20</span>条记录</p>
                             <ul style="float: right;" class="pagination pagination-split"></ul>
                         </div>
@@ -93,6 +109,30 @@
             </td>
         </tr>
     </template>
+
+
+    <template id="templist2">
+        <tr>
+            <td>{NO}</td>
+            <td>{ArticleTitle}</td>            
+            <td>{ShopName}</td>
+            <td>{CreateTime}</td>
+            <td>{SendTarget}</td>
+            <td>{ArticleStatus}</td>
+            <td>
+                <span class="cursor-point" onclick="articleHelper.audit('{ArticleId}');"><i class="fa fa-pencil tooltips" data-placement="top" data-toggle="tooltip" data-original-title="编辑"></i></span>
+                <hot style="{display}">                    
+                    &nbsp;
+                    <span class="cursor-point" onclick="articleHelper.updateStatus('{ArticleId}',1)"><i class="fa fa-trash tooltips" data-placement="top" data-toggle="tooltip" data-original-title="同意"></i></span>                        
+                </hot>
+                <hot style="{display}">
+                    &nbsp;
+                    <span class="cursor-point" onclick="articleHelper.updateStatus('{ArticleId}',-1)"><i class="fa fa-trash tooltips" data-placement="top" data-toggle="tooltip" data-original-title="拒绝"></i></span>
+                </hot>
+            </td>
+        </tr>
+    </template>
+
 
 
     <link href="/static/js/plugins/CtiyPicker/css/cityPicker.css" rel="stylesheet" />

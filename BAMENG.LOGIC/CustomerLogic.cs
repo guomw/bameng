@@ -23,16 +23,89 @@ namespace BAMENG.LOGIC
     public class CustomerLogic
     {
         /// <summary>
-        /// 根据用户ID获取该用户下的客户列表
+        /// 获取客户列表
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static ResultPageModel GetCustomerListByUserId(SearchModel model)
+        public static ResultPageModel GetCustomerList(SearchModel model, bool isvalid = true)
         {
             using (var dal = FactoryDispatcher.CustomerFactory())
             {
-                return dal.GetCustomerListByUserId(model);
+                return dal.GetCustomerList(model, isvalid);
             }
         }
+
+
+        /// <summary>
+        /// 添加客户
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool InsertCustomerInfo(CustomerModel model)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.InsertCustomerInfo(model)>0;
+            }
+        }
+
+        /// <summary>
+        /// 修改客户
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public static bool UpdateCustomerInfo(CustomerModel model)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.UpdateCustomerInfo(model);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 删除客户信息
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public static bool DeleteCustomerInfo(int customerId)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.DeleteCustomerInfo(customerId);
+            }
+        }
+
+
+        /// <summary>
+        /// 更新状态
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="status"></param>
+        /// <param name="userId">操作人ID(此方法只有盟主操作)</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public static bool UpdateStatus(int customerId, int status, int userId)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.UpdateStatus(customerId, status, userId);
+            }
+        }
+
+        /// <summary>
+        /// 判断客户是否存在
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <param name="addr">地址</param>
+        /// <returns></returns>
+        public static bool IsExist(string mobile, string addr)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.IsExist(mobile, addr);
+            }
+        }
+
     }
 }

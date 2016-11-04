@@ -1,5 +1,4 @@
-﻿using BAMENG.API.App_Start;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
@@ -10,8 +9,15 @@ using System.Web.Routing;
 
 namespace BAMENG.API
 {
+    /// <summary>
+    /// Class MvcApplication.
+    /// </summary>
+    /// <seealso cref="System.Web.HttpApplication" />
     public class MvcApplication : System.Web.HttpApplication
     {
+        /// <summary>
+        /// Application_s the start.
+        /// </summary>
         protected void Application_Start()
         {
             //添加json 解析  使用方法 http://xxx/api/action?json=true

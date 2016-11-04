@@ -16,19 +16,25 @@ using System.Threading.Tasks;
 
 namespace BAMENG.MODEL
 {
+    /// <summary>
+    ///资讯实体对象
+    /// </summary>
     public class ArticleModel
     {
         /// <summary>
-        /// 资讯id 
+        /// 资讯id
         /// </summary>
+        /// <value>The article identifier.</value>
         public int ArticleId { get; set; }
         /// <summary>
         /// 作者ID
         /// </summary>
+        /// <value>The author identifier.</value>
         public int AuthorId { get; set; }
         /// <summary>
         /// 作者名称
         /// </summary>
+        /// <value>The name of the author.</value>
         public string AuthorName { get; set; }
         /// <summary>
         /// 作者身份类型，0集团，1总店，2分店  3盟主 4盟友
@@ -45,6 +51,7 @@ namespace BAMENG.MODEL
         /// <summary>
         /// 排序
         /// </summary>
+        /// <value>The article sort.</value>
         public int ArticleSort { get; set; }
 
         /// <summary>
@@ -64,6 +71,7 @@ namespace BAMENG.MODEL
         /// 资讯简介
         /// </summary>
         public string ArticleIntro { get; set; }
+
         /// <summary>
         /// 资讯封面
         /// </summary>
@@ -84,6 +92,7 @@ namespace BAMENG.MODEL
         /// <summary>
         /// 阅读量
         /// </summary>
+        /// <value>The browse amount.</value>
         public long BrowseAmount { get; set; }
 
         /// <summary>
@@ -108,7 +117,7 @@ namespace BAMENG.MODEL
         /// <summary>
         /// 修改时间
         /// </summary>
-        public DateTime UpdateTime { get;set; }
+        public DateTime UpdateTime { get; set; }
 
         /// <summary>
         /// 发布时间
@@ -118,6 +127,18 @@ namespace BAMENG.MODEL
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 店铺名称
+        /// </summary>
+        public string ShopName { get; set; }
+
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        /// <value>The remark.</value>
+        public string Remark { get; set; }
 
     }
 }

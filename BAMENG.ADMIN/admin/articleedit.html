@@ -94,7 +94,9 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-8 col-sm-offset-5">
-                            <button class="btn btn-success" type="submit">提交</button>
+                            <button class="btn btn-success btn-submit" type="submit">提交</button>
+                            <button class="btn btn-success btn-yes" onclick="articleHelper.updateStatus(1)" style="display:none;" type="button">同意</button>
+                            <button class="btn btn-success btn-no"  onclick="articleHelper.updateStatus(-1)" style="display:none;" type="button">拒绝</button>
                         </div>
                     </div>
                 </form>

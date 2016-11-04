@@ -117,9 +117,17 @@ namespace BAMENG.ADMIN.handler
                     case "GETALLYLIST":
                         GetAllyList();
                         break;
-                    case "GETCUSTOMERLISTBYUSERID":
-                        GetCustomerListByUserId();
+                    case "GETCUSTOMERLIST":
+                        GetCustomerList();
                         break;
+
+                    case "EDITCUSTOMERINFO":
+                        EditCustomerInfo();
+                        break;
+                    case "DELETECUSTOMERINFO":
+                        DeleteCustomerInfo();
+                        break;
+
                     case "GETLEVELLIST":
                         GetLevelList();
                         break;
@@ -143,6 +151,10 @@ namespace BAMENG.ADMIN.handler
                         break;
                     case "GETMENULIST":
                         GetMenuList();
+                        break;
+
+                    case "GETFOCUSPICLIST":
+                        GetFocusPicList();
                         break;
                     default:
                         break;
@@ -216,6 +228,9 @@ namespace BAMENG.ADMIN.handler
         }
 
 
+        /// <summary>
+        /// Deletes the shop.
+        /// </summary>
         private void DeleteShop()
         {
             if (ShopLogic.DeleteShop(ShopID))
@@ -224,7 +239,9 @@ namespace BAMENG.ADMIN.handler
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
         }
 
-
+        /// <summary>
+        /// 冻结或解冻门店
+        /// </summary>
         private void UpdateShopActive()
         {
             int active = GetFormValue("active", 1);
@@ -326,17 +343,69 @@ namespace BAMENG.ADMIN.handler
         /// <summary>
         /// 根据用户ID获取该用户下的客户列表
         /// </summary>
-        private void GetCustomerListByUserId()
+        private void GetCustomerList()
         {
             SearchModel model = new SearchModel()
             {
                 PageIndex = Convert.ToInt32(GetFormValue("pageIndex", 1)),
                 PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
-                UserId = UserId
+                UserId = UserId,
+                startTime = GetFormValue("startTime", ""),
+                endTime = GetFormValue("endTime", ""),
+                key = GetFormValue("key", ""),
+                searchType = GetFormValue("searchType", 0)
             };
-            var data = CustomerLogic.GetCustomerListByUserId(model);
+            var data = CustomerLogic.GetCustomerList(model);
             json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
         }
+
+        /// <summary>
+        /// 编辑客户信息
+        /// </summary>
+        private void EditCustomerInfo()
+        {
+            CustomerModel model = new CustomerModel()
+            {
+                ID = GetFormValue("customerid", 0),
+                Name = GetFormValue("username", ""),
+                Mobile = GetFormValue("usermobile", ""),
+                Addr = GetFormValue("useraddress", "")
+            };
+
+            if (CustomerLogic.UpdateCustomerInfo(model))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.更新失败));
+        }
+
+
+        /// <summary>
+        /// 删除客户信息
+        /// </summary>
+        private void DeleteCustomerInfo()
+        {
+            if (CustomerLogic.DeleteCustomerInfo(GetFormValue("customerid", 0)))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// 获取等级
@@ -388,6 +457,7 @@ namespace BAMENG.ADMIN.handler
                 endTime = GetFormValue("endTime", ""),
                 key = GetFormValue("key", ""),
                 searchType = GetFormValue("searchType", 0),
+                Status = GetFormValue("type", 1)
             };
 
             //作者身份类型，0集团，1总店，2分店  3盟主 4盟友
@@ -415,8 +485,9 @@ namespace BAMENG.ADMIN.handler
         private void UpdateArticleCode()
         {
             int articleId = GetFormValue("articleId", 0);
-            int type = GetFormValue("type", 0);//1修改置顶，2修改发布，3，删除
+            int type = GetFormValue("type", 0);//1修改置顶，2修改发布，3，删除 ,4审核
             int active = GetFormValue("active", 0);
+            string remark = GetFormValue("remark", "");
 
             bool flag = false;
             if (type == 1)//置顶
@@ -425,13 +496,15 @@ namespace BAMENG.ADMIN.handler
                 flag = ArticleLogic.SetArticleEnablePublish(articleId, active == 1);
             else if (type == 3)//删除
                 flag = ArticleLogic.DeleteArticle(articleId);
-
+            else if (type == 4)//删除
+                flag = ArticleLogic.SetArticleStatus(articleId, active, remark);
 
             if (flag)
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
             else
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.更新失败));
         }
+
         /// <summary>
         /// 编辑资讯
         /// </summary>
@@ -478,6 +551,41 @@ namespace BAMENG.ADMIN.handler
                 resultData.authority = "";
             }
             json = JsonHelper.JsonSerializer(new ResultModel(appCode, resultData));
+        }
+
+
+        /// <summary>
+        /// 获取焦点广告图
+        /// </summary>
+        private void GetFocusPicList()
+        {
+            SearchModel model = new SearchModel()
+            {
+                PageIndex = Convert.ToInt32(GetFormValue("pageIndex", 1)),
+                PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
+                startTime = GetFormValue("startTime", ""),
+                endTime = GetFormValue("endTime", ""),
+                key = GetFormValue("key", ""),                
+                type = GetFormValue("type", 0),//0 资讯轮播图 1首页轮播图
+            };
+            var data = FocusPicLogic.GetList(model);
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+
+        /// <summary>
+        /// Edits the focus pic.
+        /// </summary>
+        private void EditFocusPic()
+        {
+
+        }
+
+        /// <summary>
+        /// Deletes the focus pic.
+        /// </summary>
+        private void DeleteFocusPic()
+        {
+
         }
     }
 }

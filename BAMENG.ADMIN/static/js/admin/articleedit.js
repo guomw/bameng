@@ -33,6 +33,7 @@ var articleHelper = {
     ajaxUrl: "/handler/HQ.ashx",
     picDir: "article/img",
     dataId: hotUtil.getQuery("articleid"),
+    audit: hotUtil.getQuery("audit"),
     loadData: function () {
         var self = this;
         var postData = {
@@ -49,6 +50,11 @@ var articleHelper = {
                     $("#articlePublish").setChecked(ret.data.EnablePublish == 1);
                     $("#txtcover").val(ret.data.ArticleCover);
                     articleHelper.setEditContent(ret.data.ArticleBody);
+
+                    if (parseInt(self.audit) == 1 && ret.data.ArticleStatus == 0) {
+                        $(".btn-yes,.btn-no").show();
+                    }
+
                 }
             }
             self.initCheck();
@@ -115,7 +121,42 @@ var articleHelper = {
         }
         else
             callback();
+    },
+    updateStatus: function (code) {
+        swal({
+            title: code == 1 ? "您确定要同意吗？" : "您确定要拒绝吗？",
+            text: code == 1 ? "同意后将无法恢复，请谨慎操作！" : "请输入拒绝理由",
+            type: code == 1 ? "warning" : "input",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: code == 1 ? "同意" : "拒绝",
+            cancelButtonText: "我再想想",
+            closeOnConfirm: false,
+            inputPlaceholder: "理由"
+        }, function (inputValue) {
+            var param = {
+                action: "UpdateArticleCode",
+                articleId: articleHelper.dataId,
+                type: 4,
+                active: code,
+                remark: inputValue
+            }
+            hotUtil.loading.show();
+            hotUtil.ajaxCall(articleHelper.ajaxUrl, param, function (ret, err) {
+                if (ret) {
+                    if (ret.status == 200) {
+                        $(".btn-yes,.btn-no").hide();
+                        swal("操作成功！", "", "success");
+                    }
+                    else {
+                        swal(ret.statusText, "", "warning");
+                    }
+                }
+                hotUtil.loading.close();
+            });
+        });
     }
+
 };
 
 
@@ -140,6 +181,9 @@ $(document).ready(function () {
 
     articleHelper.loadData();
 
+    if (parseInt(articleHelper.audit) == 1) {
+        $(".btn-submit").hide();
+    }
     var e = "<i class='fa fa-times-circle'></i> ";
     $("#signupForm").validate({
         rules: {

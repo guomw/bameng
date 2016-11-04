@@ -22,15 +22,15 @@ namespace BAMENG.MODEL
     public class CustomerModel
     {
         /// <summary>
-        /// 
+        /// ID
         /// </summary>
         public int ID { get; set; }
         /// <summary>
-        /// 
+        /// 所属盟友
         /// </summary>
         public int BelongOne { get; set; }
         /// <summary>
-        /// 
+        /// 所属盟主
         /// </summary>
         public int BelongTwo { get; set; }
         /// <summary>
@@ -38,35 +38,45 @@ namespace BAMENG.MODEL
         /// </summary>
         public int Status { get; set; }
         /// <summary>
-        /// 
+        /// 客户姓名
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 
+        /// 客户手机
         /// </summary>
         public string Mobile { get; set; }
         /// <summary>
-        /// 
+        /// 是否删除
+        /// </summary>
+        public int IsDel { get; set; }
+
+        /// <summary>
+        /// 客户地址
         /// </summary>
         public string Addr { get; set; }
         /// <summary>
-        /// 
+        /// 备注
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 
+        /// 所属门店ID
         /// </summary>
         public int ShopId { get; set; }
         /// <summary>
-        /// 
+        /// 盟友姓名
         /// </summary>
         public string BelongOneName { get; set; }
         /// <summary>
-        /// 
+        /// 盟主姓名
         /// </summary>
         public string BelongTwoName { get; set; }
         /// <summary>
-        /// 
+        /// 门店名称
+        /// </summary>
+        public string ShopName { get; set; }
+
+        /// <summary>
+        /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
     }

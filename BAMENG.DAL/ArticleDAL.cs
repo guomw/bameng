@@ -26,8 +26,10 @@ namespace BAMENG.DAL
     {
 
         private const string APP_SELECT = @"select A.ArticleId,A.AuthorId,a.AuthorName,a.AuthorIdentity,a.SendTargetId,a.SendType,a.ArticleSort,a.ArticleType,a.ArticleClassify
-                                            ,a.ArticleTitle,a.ArticleIntro,a.ArticleCover,a.ArticleBody,a.EnableTop,a.EnablePublish,a.BrowseAmount,a.ArticleStatus,a.IsDel,a.IsRead,a.TopTime,a.UpdateTime,a.PublishTime,a.CreateTime
-                                             from BM_ArticleList A with(nolock) where a.IsDel=0";
+                                            ,a.ArticleTitle,a.ArticleIntro,a.ArticleCover,a.ArticleBody,a.EnableTop,a.EnablePublish,a.BrowseAmount,a.ArticleStatus,a.IsDel,a.IsRead,a.TopTime,a.UpdateTime,a.PublishTime,a.CreateTime,S.ShopName
+                                             from BM_ArticleList A with(nolock)
+                                            left join BM_ShopManage S with(nolock) on S.ShopID=AuthorId
+                                            where a.IsDel=0 ";
 
 
         /// <summary>
@@ -101,9 +103,42 @@ namespace BAMENG.DAL
                         break;
                 }
             }
-            strSql += " and a.AuthorIdentity=@AuthorIdentity ";
             if (AuthorId > 0)
                 strSql += " and A.AuthorId=@AuthorId ";
+
+            if (model.Status != -100)
+            {
+                /* 总后台下
+                 * 资讯列表只获取总后台发布的资讯
+                 * Status=1标题当前在资讯列表,否则在审核列表
+                 * 审核列表的数据，一般只有总店和分店提交的资讯数据，没有总店添加的资讯数据
+                 * 门店后台下
+                 * 资讯列表只获取当前门店发布的资讯，包含审核通过、申请中、审核失败的资讯
+                 * 
+                */
+
+
+                if (model.Status == 1)
+                {
+                    //如果不是总后台身份
+                    if (AuthorIdentity != 0)
+                        strSql += " and A.AuthorIdentity=@AuthorIdentity ";
+                    else
+                        strSql += " and A.ArticleStatus=1 ";
+                }
+                else
+                {
+                    //这里只有总后台才有入口进来
+                    if (AuthorIdentity == 0)
+                    {
+                        //TODO:过滤总后台发布的资讯数据，只获取总店和分店的数据
+                        strSql += " and A.AuthorIdentity in (1,2) ";
+                    }
+                    else
+                        strSql += " and A.AuthorIdentity=@AuthorIdentity";
+                }
+            }
+
 
             if (!string.IsNullOrEmpty(model.startTime))
                 strSql += " and CONVERT(nvarchar(10),A.CreateTime,121)>=@startTime ";
@@ -178,6 +213,26 @@ namespace BAMENG.DAL
             };
             return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
         }
+
+        /// <summary>
+        /// 设置审核状态
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <param name="status">The status.</param>
+        /// <param name="remark">备注</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool SetArticleStatus(int articleId, int status,string remark)
+        {
+            string strSql = "update BM_ArticleList set ArticleStatus=@ArticleStatus,Remark=@Remark  where ArticleId=@ArticleId";
+            var param = new[] {
+                new SqlParameter("@ArticleStatus",status),
+                new SqlParameter("@Remark",remark),
+                new SqlParameter("@ArticleId",articleId)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+        }
+
         /// <summary>
         /// 修改资讯
         /// </summary>

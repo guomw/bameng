@@ -1,4 +1,5 @@
 ﻿using BAMENG.CONFIG;
+using BAMENG.MODEL;
 using HotCoreUtils.Helper;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,12 @@ namespace BAMENG.API
     /// </summary>
     public class AllowOriginAttribute
     {
+        /// <summary>
+        /// Ons the excute.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="AllowSites">The allow sites.</param>
+        /// <returns></returns>
         public static bool onExcute(ControllerContext context, string[] AllowSites)
         {
             bool Success = true;
@@ -28,7 +35,7 @@ namespace BAMENG.API
             };
             if (AllowSites != null && AllowSites.Any())
             {
-                if (AllowSites.Contains(origin) || AllowSites.Contains("*"))
+                if (AllowSites.Contains(origin)/* || AllowSites.Contains("*")*/)
                 {
                     Success = true;
                     action();
@@ -49,6 +56,11 @@ namespace BAMENG.API
     public class ApiAuthorizeAttribute
     {
         HttpContextBase ctx = null;
+        /// <summary>
+        /// Ons the excute.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>ApiRequestStatusCode.</returns>
         public ApiRequestStatusCode onExcute(HttpContextBase context)
         {
             ctx = context;
@@ -72,7 +84,7 @@ namespace BAMENG.API
                 }
             }
             string currentSign = SignatureHelper.BuildSign(paramters, ConstConfig.SECRET_KEY);
-            LogHelper.Log(string.Format("currentSign:{0},requestSign:{1}", currentSign, requestSign));
+            //LogHelper.Log(string.Format("currentSign:{0},requestSign:{1}", currentSign, requestSign));
             if (!requestSign.Equals(currentSign))
             {
                 return ApiRequestStatusCode.未授权;
@@ -121,15 +133,54 @@ namespace BAMENG.API
 
     }
 
+
     /// <summary>
     /// 设置action的访问权限
     /// </summary>
+    /// <seealso cref="System.Web.Mvc.ActionFilterAttribute" />
     public class ActionAuthorizeAttribute : ActionFilterAttribute
     {
+        private bool _AllowCrossDomainVisit = false;
         /// <summary>
-        /// 
+        /// 是否允许跨域访问，默认不开启跨域访问
         /// </summary>
+        /// <value>true if [allow cross domain visit]; otherwise, false.</value>
+        public bool AllowCrossDomainVisit
+        {
+            get
+            {
+                return _AllowCrossDomainVisit;
+            }
+
+            set
+            {
+                _AllowCrossDomainVisit = value;
+            }
+        }
+        /// <summary>
+        /// 设置允许跨域访问的网站
+        /// </summary>
+        /// <value>The allow sites.</value>
         public string[] AllowSites { get; set; }
+
+        /// <summary>
+        /// 身份授权登录
+        /// </summary>
+        /// <value>true if authentication; otherwise, false.</value>
+        public bool AuthLogin
+        {
+            get
+            {
+                return _Auth;
+            }
+
+            set
+            {
+                _Auth = value;
+            }
+        }
+        private bool _Auth = true;
+
         /// <summary>
         /// 
         /// </summary>
@@ -137,14 +188,29 @@ namespace BAMENG.API
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             //判断当前访问域是否有访问权限
-            bool flag = AllowOriginAttribute.onExcute(filterContext, AllowSites);
-            if (!WebConfig.debugMode() && flag)
-            {
-                ApiAuthorizeAttribute authorize = new ApiAuthorizeAttribute();
-                //签名验证,并返回验证结果
-                ApiRequestStatusCode apiCode = authorize.onExcute(filterContext.HttpContext);
+            bool flag = AllowCrossDomainVisit ? AllowOriginAttribute.onExcute(filterContext, AllowSites) : true;
 
-                filterContext.HttpContext.Response.StatusCode = (int)apiCode;
+            //验证授权登录
+            if (flag)
+            {
+                //如果启用了授权登录，需要验证登录信息是否正确
+                if (AuthLogin)
+                {
+                    BaseController.Instance.AuthUserData = new UserModel() { };
+                }
+                else
+                {
+                    BaseController.Instance.AuthUserData = null;
+                }
+                //如果非测试环境下，需要验证签名
+                if (!WebConfig.debugMode())
+                {
+                    ApiAuthorizeAttribute authorize = new ApiAuthorizeAttribute();
+                    //签名验证,并返回验证结果
+                    ApiRequestStatusCode apiCode = authorize.onExcute(filterContext.HttpContext);
+
+                    filterContext.HttpContext.Response.StatusCode = 200;// (int)apiCode;
+                }
             }
         }
 

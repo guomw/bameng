@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 
 namespace BAMENG.MODEL
 {
+    /// <summary>
+    /// 接口返回实体对象
+    /// </summary>
     public class ResultModel
     {
 
@@ -238,9 +241,9 @@ namespace BAMENG.MODEL
 
         public int level { get; set; }
         /// <summary>
-        /// 时间类型
+        /// 类型
         /// </summary>
-        public int timeType { get; set; }
+        public int type { get; set; }
 
         /// <summary>
         /// 省份

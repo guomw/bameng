@@ -101,6 +101,22 @@ namespace BAMENG.LOGIC
             }
         }
 
+        /// <summary>
+        /// 设置资讯审核状态
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <param name="status">-1 审核失败 1审核成功</param>
+        /// <param name="remark">The remark.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public static bool SetArticleStatus(int articleId, int status,string remark)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.SetArticleStatus(articleId, status, remark);
+            }
+        }
+
+
 
     }
 }

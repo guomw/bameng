@@ -71,5 +71,14 @@ namespace BAMENG.IDAL
         /// <returns></returns>
         bool SetArticleEnablePublish(int articleId, bool enable);
 
+        /// <summary>
+        /// 设置审核状态
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <param name="status">The status.</param>
+        /// <param name="remark">备注</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        bool SetArticleStatus(int articleId,int status,string remark);
+
     }
 }

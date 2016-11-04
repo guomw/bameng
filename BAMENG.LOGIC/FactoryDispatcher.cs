@@ -67,5 +67,15 @@ namespace BAMENG.LOGIC
         {
             return new SystemDAL();
         }
+
+
+        /// <summary>
+        /// 焦点广告图
+        /// </summary>
+        /// <returns>IFocusPicDAL.</returns>
+        public static IFocusPicDAL FocusFactory()
+        {
+            return new FocusPicDAL();
+        }
     }
 }

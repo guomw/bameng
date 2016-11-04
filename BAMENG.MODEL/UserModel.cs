@@ -18,6 +18,7 @@ namespace BAMENG.MODEL
     /// <summary>
     /// 用户基本信息
     /// </summary>
+    [Serializable]
     public class UserModel
     {
         /// <summary>
@@ -37,10 +38,22 @@ namespace BAMENG.MODEL
         /// </summary>
         public int ShopId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the is active.
+        /// </summary>
+        /// <value>The is active.</value>
         public int IsActive { get; set; }
 
+        /// <summary>
+        /// Gets or sets the score.
+        /// </summary>
+        /// <value>The score.</value>
         public decimal Score { get; set; }
 
+        /// <summary>
+        /// Gets or sets the score locked.
+        /// </summary>
+        /// <value>The score locked.</value>
         public decimal ScoreLocked { get; set; }
         /// <summary>
         /// 盟豆
@@ -51,17 +64,57 @@ namespace BAMENG.MODEL
         /// </summary>
         public decimal MengBeansLocked { get; set; }
 
+        /// <summary>
+        /// Gets or sets the create time.
+        /// </summary>
+        /// <value>The create time.</value>
         public DateTime CreateTime { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the login.
+        /// </summary>
+        /// <value>The name of the login.</value>
         public string LoginName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the real.
+        /// </summary>
+        /// <value>The name of the real.</value>
         public string RealName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the nick.
+        /// </summary>
+        /// <value>The name of the nick.</value>
         public string NickName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user mobile.
+        /// </summary>
+        /// <value>The user mobile.</value>
         public string UserMobile { get; set; }
+        /// <summary>
+        /// Gets or sets the user head img.
+        /// </summary>
+        /// <value>The user head img.</value>
         public string UserHeadImg { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the shop.
+        /// </summary>
+        /// <value>The name of the shop.</value>
         public string ShopName { get; set; }
+        /// <summary>
+        /// Gets or sets the shop prov.
+        /// </summary>
+        /// <value>The shop prov.</value>
         public string ShopProv { get; set; }
+        /// <summary>
+        /// Gets or sets the shop city.
+        /// </summary>
+        /// <value>The shop city.</value>
         public string ShopCity { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the level.
+        /// </summary>
+        /// <value>The name of the level.</value>
         public string LevelName { get; set; }
         /// <summary>
         /// 订单成交量
@@ -72,9 +125,18 @@ namespace BAMENG.MODEL
         /// </summary>
         public int CustomerAmount { get; set; }
 
+        /// <summary>
+        /// 用户唯一令牌,调用其他接口是，需要使用该令牌
+        /// </summary>
+        /// <value>The token.</value>
+        public string token { get; set; }
+
     }
 
 
+    /// <summary>
+    /// Class UserRegisterModel.
+    /// </summary>
     public class UserRegisterModel
     {
         /// <summary>

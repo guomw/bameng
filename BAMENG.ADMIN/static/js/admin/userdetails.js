@@ -101,7 +101,7 @@ var userdetailsHelper = {
             return;
         var self = this;
         var postData = {
-            action: "GetCustomerListByUserId",
+            action: "GetCustomerList",
             pageIndex: page,
             pageSize: 20,
             userid: this.currentUserId

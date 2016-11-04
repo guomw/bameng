@@ -1,0 +1,11 @@
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.IDAL.dll
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.IDAL.pdb
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.MODEL.dll
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.CONFIG.dll
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\HotCoreUtils.dll
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.MODEL.pdb
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\BAMENG.CONFIG.pdb
+J:\HOT\CODE\bameng\BAMENG.IDAL\bin\Debug\HotCoreUtils.xml
+J:\HOT\CODE\bameng\BAMENG.IDAL\obj\Debug\BAMENG.IDAL.csprojResolveAssemblyReference.cache
+J:\HOT\CODE\bameng\BAMENG.IDAL\obj\Debug\BAMENG.IDAL.dll
+J:\HOT\CODE\bameng\BAMENG.IDAL\obj\Debug\BAMENG.IDAL.pdb

@@ -99,9 +99,11 @@
   <ItemGroup>
     <Content Include="admin\articleedit.html" />
     <Content Include="admin\articlelist.html" />
+    <Content Include="admin\focuspic.html" />
     <Content Include="admin\shoplist.html" />
     <Content Include="admin\userdetails.html" />
     <Content Include="admin\userlevel.html" />
+    <Content Include="admin\customerlist.html" />
     <Content Include="admin\userlist.html" />
     <Content Include="index.html" />
     <Content Include="packages.config" />
@@ -119,6 +121,8 @@
     <Content Include="static\js\admin\Login.js" />
     <Content Include="static\js\admin\userdetails.js" />
     <Content Include="static\js\admin\userlevel.js" />
+    <Content Include="static\js\admin\customerlist.js" />
+    <Content Include="static\js\admin\focuspic.js" />
     <Content Include="static\js\admin\userlist.js" />
     <Content Include="static\js\demoLeftData.js" />
     <Content Include="static\js\plugins\CtiyPicker\css\cityPicker.css" />
