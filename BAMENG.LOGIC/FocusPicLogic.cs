@@ -36,6 +36,20 @@ namespace BAMENG.LOGIC
         }
 
         /// <summary>
+        /// 获取播图
+        /// </summary>
+        /// <param name="type">0 资讯轮播图 1首页轮播图</param>
+        /// <returns>List&lt;FocusPicModel&gt;.</returns>
+        public static List<FocusPicModel> GetAppList(int type)
+        {
+            using (var dal = FactoryDispatcher.FocusFactory())
+            {
+                return dal.GetAppList(type);
+            }
+        }
+
+
+        /// <summary>
         /// 编辑焦点广告图
         /// </summary>
         /// <param name="model">The model.</param>

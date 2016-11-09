@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,16 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSystemLogic.cs" />
+    <Compile Include="AppServiceLogic.cs" />
     <Compile Include="ArticleLogic.cs" />
     <Compile Include="BaseLogicFactory.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="ConfigLogic.cs" />
     <Compile Include="CustomerLogic.cs" />
     <Compile Include="FactoryDispatcher.cs" />
     <Compile Include="FocusPicLogic.cs" />
+    <Compile Include="LogLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopLogic.cs" />
+    <Compile Include="SmsLogic.cs" />
     <Compile Include="SystemLogic.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>

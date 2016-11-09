@@ -28,6 +28,14 @@ namespace BAMENG.IDAL
         /// <returns>ResultPageModel.</returns>
         ResultPageModel GetList(SearchModel model);
 
+
+        /// <summary>
+        /// 获取播图
+        /// </summary>
+        /// <param name="type">0 资讯轮播图 1首页轮播图</param>
+        /// <returns>List&lt;FocusPicModel&gt;.</returns>
+        List<FocusPicModel> GetAppList(int type);
+
         /// <summary>
         /// 添加焦点广告图
         /// </summary>

@@ -1,8 +1,10 @@
 ﻿using BAMENG.CONFIG;
+using BAMENG.LOGIC;
 using BAMENG.MODEL;
 using HotCoreUtils.Helper;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,18 +26,20 @@ namespace BAMENG.API.Controllers
         /// <param name="password">The password.</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize(AuthLogin = false)]
-        public JsonResult Login(string loginName, string password)
+        public ActionResult Login(string loginName, string password)
         {
-            return Json(new ResultModel(ApiStatusCode.OK, new UserModel() { CreateTime = DateTime.Now, token = EncryptHelper.MD5("") }));
+            ApiStatusCode apiCode = ApiStatusCode.OK;
+            UserModel userData = AppServiceLogic.Instance.Login(loginName, password, ref apiCode);
+            return Json(new ResultModel(apiCode, userData));
         }
         /// <summary>
         /// 签到  POST: user/signin
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        [ActionAuthorize(AuthLogin = false)]        
-        public JsonResult SignIn()
+        [ActionAuthorize]
+        public ActionResult SignIn()
         {
-            return Json(new ResultModel(ApiStatusCode.OK, AuthUserData));
+            return Json(new ResultModel(ApiStatusCode.OK));
         }
 
         /// <summary>
@@ -45,10 +49,17 @@ namespace BAMENG.API.Controllers
         /// <param name="password">The password.</param>
         /// <param name="verifyCode">The verify code.</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        [ActionAuthorize]
-        public JsonResult ForgetPwd(string mobile, string password, string verifyCode)
+        [ActionAuthorize(AuthLogin = false)]
+        public ActionResult ForgetPwd(string mobile, string password, string verifyCode)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            if (SmsLogic.IsPassVerify(mobile, verifyCode))
+            {
+                if (UserLogic.ForgetPwd(mobile, password))
+                    return Json(new ResultModel(ApiStatusCode.OK));
+                else
+                    return Json(new ResultModel(ApiStatusCode.找回密码失败));
+            }
+            return Json(new ResultModel(ApiStatusCode.无效验证码));
         }
 
         /// <summary>
@@ -56,9 +67,9 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{ status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult TempSettleBeanList()
+        public ActionResult TempSettleBeanList()
         {
-            return Json(new ResultModel(ApiStatusCode.OK, AuthUserData));
+            return Json(new ResultModel(ApiStatusCode.OK));
         }
 
         /// <summary>
@@ -66,7 +77,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ConvertToBean()
+        public ActionResult ConvertToBean()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -77,18 +88,26 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ConvertFlow()
+        public ActionResult ConvertFlow()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
         /// <summary>
         /// 盟友列表 POST: user/allylist
         /// </summary>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult allylist()
+        public JsonResult allylist(int pageIndex, int pageSize)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            var data = UserLogic.GetAllyList(new SearchModel()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                UserId = GetAuthUserId()
+            });
+            return Json(new ResultModel(ApiStatusCode.OK, data));
         }
 
         /// <summary>
@@ -96,7 +115,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ConvertAuditList()
+        public ActionResult ConvertAuditList()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -106,7 +125,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ConvertAudit()
+        public ActionResult ConvertAudit()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -116,7 +135,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult MyInfo()
+        public ActionResult MyInfo()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -126,7 +145,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult UpdateInfo()
+        public ActionResult UpdateInfo()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -134,18 +153,28 @@ namespace BAMENG.API.Controllers
         /// <summary>
         /// 设置盟友奖励 POST: user/setallyaward
         /// </summary>
+        /// <param name="creward">客户资料提交奖励</param>
+        /// <param name="orderreward">订单成交奖励</param>
+        /// <param name="shopreward">客户进店奖励</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult setallyaward()
+        public ActionResult setallyRaward(decimal creward, decimal orderreward, decimal shopreward)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            var user = GetUserData();
+            if (user.UserIdentity == 1)
+            {
+                bool flag = UserLogic.SetAllyRaward(user.UserId, creward, orderreward, shopreward);
+                return Json(new ResultModel(flag ? ApiStatusCode.OK : ApiStatusCode.保存失败));
+            }
+            else
+                return Json(new ResultModel(ApiStatusCode.无操作权限));
         }
         /// <summary>
         /// 积分列表 POST: user/scoreList
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult scoreList()
+        public ActionResult scoreList()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -156,7 +185,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult BeanFlowList()
+        public ActionResult BeanFlowList()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -164,11 +193,13 @@ namespace BAMENG.API.Controllers
         /// <summary>
         /// 盟友详情 POST: user/AllyInfo
         /// </summary>
-        /// <returns></returns>
+        /// <param name="userid">盟友用户ID</param>
+        /// <returns>JsonResult.</returns>
         [ActionAuthorize]
-        public JsonResult AllyInfo()
+        public JsonResult AllyInfo(int userid)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            var data = UserLogic.GetModel(userid);
+            return Json(new ResultModel(ApiStatusCode.OK, data));
         }
 
         /// <summary>
@@ -176,7 +207,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult AllyApply()
+        public ActionResult AllyApply()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -185,7 +216,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult AllyApplylist()
+        public ActionResult AllyApplylist()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -194,7 +225,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult AllyApplyAudit()
+        public ActionResult AllyApplyAudit()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -203,12 +234,16 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <param name="oldPassword">The old password.</param>
         /// <param name="newPassword">The new password.</param>
-        /// <param name="confirmPassword">The confirm password.</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ChanagePassword(string oldPassword, string newPassword, string confirmPassword)
+        public ActionResult ChanagePassword(string oldPassword, string newPassword)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            var user = GetUserData();
+            if (UserLogic.ChanagePassword(user.UserId, oldPassword, newPassword))
+                return Json(new ResultModel(ApiStatusCode.OK));
+            else
+                return Json(new ResultModel(ApiStatusCode.密码修改失败));
+
         }
 
         /// <summary>
@@ -219,7 +254,7 @@ namespace BAMENG.API.Controllers
         /// <param name="newMobile">The new mobile.</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult ChanageMobile(string mobile, string verifyCode, string newMobile)
+        public ActionResult ChanageMobile(string mobile, string verifyCode, string newMobile)
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -229,7 +264,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult MyCashCouponList()
+        public ActionResult MyCashCouponList()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -238,7 +273,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult MyBusiness()
+        public ActionResult MyBusiness()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -248,7 +283,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult MyTreasure()
+        public ActionResult MyTreasure()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
         }
@@ -258,7 +293,7 @@ namespace BAMENG.API.Controllers
         /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         [ActionAuthorize]
-        public JsonResult AllyHomeSummary()
+        public ActionResult AllyHomeSummary()
         {
             return Json(new ResultModel(ApiStatusCode.OK));
 

@@ -16,28 +16,73 @@ using System.Threading.Tasks;
 
 namespace BAMENG.MODEL
 {
-    /// <summary>
-    ///资讯实体对象
-    /// </summary>
-    public class ArticleModel
+
+
+    public class ArticleBaseModel
     {
         /// <summary>
         /// 资讯id
         /// </summary>
         /// <value>The article identifier.</value>
         public int ArticleId { get; set; }
+
+
+        /// <summary>
+        /// 资讯封面
+        /// </summary>
+        public string ArticleCover { get; set; }
+        /// <summary>
+        /// 资讯标题
+        /// </summary>
+        public string ArticleTitle { get; set; }
+        /// <summary>
+        /// 资讯简介
+        /// </summary>
+        public string ArticleIntro { get; set; }
+
+        /// <summary>
+        /// 阅读量
+        /// </summary>
+        /// <value>The browse amount.</value>
+        public long BrowseAmount { get; set; }
+
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public DateTime PublishTime { get; set; }
+
+        /// <summary>
+        /// 资讯详情地址
+        /// </summary>
+        /// <value>The article URL.</value>
+        public string ArticleUrl { get; set; }
+
+        /// <summary>
+        /// 是否阅读
+        /// </summary>
+        public int IsRead { get; set; }
+    }
+
+    /// <summary>
+    ///资讯实体对象
+    /// </summary>
+    public class ArticleModel : ArticleBaseModel
+    {
+
         /// <summary>
         /// 作者ID
         /// </summary>
         /// <value>The author identifier.</value>
         public int AuthorId { get; set; }
+
         /// <summary>
         /// 作者名称
         /// </summary>
         /// <value>The name of the author.</value>
         public string AuthorName { get; set; }
+
         /// <summary>
-        /// 作者身份类型，0集团，1总店，2分店  3盟主 4盟友
+        /// 资讯类型，0集团，1总店，2分店  3盟主 4盟友
         /// </summary>
         public int AuthorIdentity { get; set; }
         /// <summary>
@@ -54,6 +99,11 @@ namespace BAMENG.MODEL
         /// <value>The article sort.</value>
         public int ArticleSort { get; set; }
 
+
+        /// <summary>
+        /// 资讯正文
+        /// </summary>
+        public string ArticleBody { get; set; }
         /// <summary>
         /// 资讯类型(暂时不用)
         /// </summary>
@@ -63,23 +113,9 @@ namespace BAMENG.MODEL
         /// 资讯分类
         /// </summary>
         public int ArticleClassify { get; set; }
-        /// <summary>
-        /// 资讯标题
-        /// </summary>
-        public string ArticleTitle { get; set; }
-        /// <summary>
-        /// 资讯简介
-        /// </summary>
-        public string ArticleIntro { get; set; }
 
-        /// <summary>
-        /// 资讯封面
-        /// </summary>
-        public string ArticleCover { get; set; }
-        /// <summary>
-        /// 资讯正文
-        /// </summary>
-        public string ArticleBody { get; set; }
+
+
         /// <summary>
         /// 是否置顶
         /// </summary>
@@ -89,11 +125,7 @@ namespace BAMENG.MODEL
         /// </summary>
         public int EnablePublish { get; set; }
 
-        /// <summary>
-        /// 阅读量
-        /// </summary>
-        /// <value>The browse amount.</value>
-        public long BrowseAmount { get; set; }
+
 
         /// <summary>
         /// 资讯状态， -1审核失败  0申请中，1审核通过
@@ -104,10 +136,7 @@ namespace BAMENG.MODEL
         /// 是否删除
         /// </summary>
         public int IsDel { get; set; }
-        /// <summary>
-        /// 是否阅读（考虑单独一个表记录阅读记录）
-        /// </summary>
-        public int IsRead { get; set; }
+
 
         /// <summary>
         /// 置顶时间
@@ -119,10 +148,7 @@ namespace BAMENG.MODEL
         /// </summary>
         public DateTime UpdateTime { get; set; }
 
-        /// <summary>
-        /// 发布时间
-        /// </summary>
-        public DateTime PublishTime { get; set; }
+
         /// <summary>
         /// 创建时间
         /// </summary>

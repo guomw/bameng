@@ -23,5 +23,7 @@ namespace BAMENG.CONFIG
         /// </summary>
         public const int storeId = 296;
 
+        //public const string Bearer = "Bearer ";
+
     }
 }

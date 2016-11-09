@@ -62,6 +62,13 @@ namespace BAMENG.MODEL
         /// 所属门店ID
         /// </summary>
         public int ShopId { get; set; }
+
+        /// <summary>
+        /// 1进店 0未进店
+        /// </summary>
+        /// <value>The in shop.</value>
+        public int InShop { get; set; }
+
         /// <summary>
         /// 盟友姓名
         /// </summary>

@@ -37,6 +37,24 @@ namespace BAMENG.LOGIC
 
 
         /// <summary>
+        /// 获取客户列表
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="identity">0盟友  1盟主</param>
+        /// <param name="type">0所有客户 1未处理  2已处理</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <returns>ResultPageModel.</returns>
+        public static ResultPageModel GetAppCustomerList(int UserId, int identity, int type, int pageIndex, int pageSize)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.GetAppCustomerList(UserId, identity, type, pageIndex, pageSize);
+            }
+        }
+
+
+        /// <summary>
         /// 添加客户
         /// </summary>
         /// <param name="model"></param>
@@ -45,7 +63,7 @@ namespace BAMENG.LOGIC
         {
             using (var dal = FactoryDispatcher.CustomerFactory())
             {
-                return dal.InsertCustomerInfo(model)>0;
+                return dal.InsertCustomerInfo(model) > 0;
             }
         }
 
@@ -107,5 +125,31 @@ namespace BAMENG.LOGIC
             }
         }
 
+        /// <summary>
+        /// 获取客户信息
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <returns>CustomerModel.</returns>
+        public static CustomerModel GetModel(int customerId)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.GetModel(customerId);
+            }
+        }
+
+        /// <summary>
+        /// 更新客户进店状态
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <param name="status">1进店 0未进店</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public static bool UpdateInShopStatus(int customerId, int status)
+        {
+            using (var dal = FactoryDispatcher.CustomerFactory())
+            {
+                return dal.UpdateInShopStatus(customerId, status);
+            }
+        }
     }
 }

@@ -132,12 +132,108 @@ namespace BAMENG.IDAL
 
 
         /// <summary>
-        /// 登录
+        /// 后台登录
         /// </summary>
         /// <param name="loginName"></param>
         /// <param name="loginPassword"></param>
         /// <param name="IsShop">是否是门店登录</param>
         /// <returns></returns>
         AdminLoginModel Login(string loginName, string loginPassword, bool IsShop);
+
+
+        /// <summary>
+        /// 前端登录
+        /// </summary>
+        /// <param name="loginName">Name of the login.</param>
+        /// <param name="loginPassword">The login password.</param>
+        /// <returns>UserModel.</returns>
+        UserModel Login(string loginName, string loginPassword);
+
+
+        /// <summary>
+        /// 添加用户授权token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="Token">The token.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool AddUserAuthToken(int UserId, string Token);
+
+
+        /// <summary>
+        /// 更新用户授权token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="Token">The token.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool UpdateUserAuthToken(int UserId, string Token);
+
+        /// <summary>
+        /// 判断授权token是否存在
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns>true if [is authentication token exist] [the specified user identifier]; otherwise, false.</returns>
+        bool IsAuthTokenExist(int UserId);
+
+        /// <summary>
+        /// 根据用户ID，获取用户token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns>System.String.</returns>
+        string GetAuthTokenByUserId(int UserId);
+
+        /// <summary>
+        /// 根据用户token，获取用户ID
+        /// </summary>
+        /// <param name="Token">The token.</param>
+        /// <returns>System.Int32.</returns>
+        int GetUserIdByAuthToken(string Token);
+
+
+
+        /// <summary>
+        /// 添加盟友奖励设置
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>System.Int32.</returns>
+        int AddRewardSetting(RewardsSettingModel model);
+
+        /// <summary>
+        /// 更新盟友奖励设置
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool UpdateRewardSetting(RewardsSettingModel model);
+
+        /// <summary>
+        ///获取盟友奖励信息
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>RewardsSettingModel.</returns>
+        RewardsSettingModel GetRewardModel(int userId);
+
+        /// <summary>
+        /// 判断当前盟主的盟友奖励是否存在
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>true if [is rewar exist] [the specified user identifier]; otherwise, false.</returns>
+        bool IsRewarExist(int userId);
+
+
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        /// <param name="mobile">The mobile.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool ForgetPwd(string mobile, string password);
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>        
+        /// <param name="oldPassword">The old password.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool ChanagePassword(int userId,string oldPassword, string password);
     }
 }

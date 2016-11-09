@@ -10,8 +10,9 @@
     <link href="/static/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
     <link href="/static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="/static/css/animate.min.css" rel="stylesheet">
-    <link href="/static/css/style.min-1.0.2.css" rel="stylesheet">
+    <link href="/static/css/plugins/switchery/switchery.css" rel="stylesheet">
     <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/static/css/style.min-1.0.2.css" rel="stylesheet">
     <base target="_blank">
 </head>
 <body class="gray-bg">
@@ -54,7 +55,7 @@
                         <div class="panel-body">
                             <div style="text-align:right;">
                                 <!-- 添加按钮 -->
-                                <button type="button" id="btnUser" class="btn btn-w-m btn-success" data-toggle="modal" data-target="#myModal2" onclick="focusHelper.dialog()">添加盟主</button>
+                                <button type="button" id="btnUser" class="btn btn-w-m btn-success" data-toggle="modal" data-target="#myModal2" onclick="focusHelper.dialog()">添加轮播图</button>
                             </div>
                             <table class="table table-bordered table-hover table-center">
                                 <thead>
@@ -66,7 +67,7 @@
                                         <th>链接</th>
                                         <th>状态</th>
                                         <th>排序</th>
-                                        <th>创建时间</th>                                       
+                                        <th>创建时间</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -83,7 +84,7 @@
 
     <template id="templist">
         <tr>
-            <td>{ID}</td>
+            <td>{NO}</td>
             <td><img src="{PicUrl}" width="60" height="60" onerror="this.src='/static/img/bg.png'" /></td>
             <td>{Title}</td>
             <td>{Description}</td>
@@ -92,9 +93,11 @@
             <td>{Sort}</td>
             <td>{CreateTime}</td>
             <td>
-                <span class="cursor-point" onclick="focusHelper.dialog('{ID}');" data-toggle="modal" data-target="#myModal2"><i class="fa fa-pencil tooltips" data-placement="top" data-toggle="tooltip" data-original-title="编辑"></i></span>
+                <span class="cursor-point" onclick="focusHelper.dialog('{ID}');" data-toggle="modal" data-target="#myModal2">编辑</span>
                 &nbsp;
-                <span class="cursor-point" onclick="focusHelper.del('{ID}')"><i class="fa fa-trash tooltips" data-placement="top" data-toggle="tooltip" data-original-title="删除"></i></span>                
+                <span class="cursor-point" onclick="focusHelper.updateActive('{ID}')">{ActiveText}</span>
+                &nbsp;
+                <span class="cursor-point" onclick="focusHelper.del('{ID}')">删除</span>
             </td>
         </tr>
     </template>
@@ -112,47 +115,48 @@
                     <div>
                         <form class="form-horizontal m-t" id="signupForm">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"><span id="allyLable">轮播图标题</span>：</label>
+                                <label class="col-sm-3 control-label"><span id="allyLable">标题</span>：</label>
                                 <div class="col-sm-8">
-                                    <input id="userid" class="form-control" type="hidden" value="0" />
-                                    <input id="username" name="username" class="form-control" type="text">
+                                    <input id="focusid" class="form-control" type="hidden" value="0" />
+                                    <input id="focustitle" name="focustitle" class="form-control" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">上传图片：</label>
                                 <div class="col-sm-8">
-                                    <input id="usermobile" name="usermobile" class="form-control" type="number" aria-required="true" aria-invalid="true" class="error">
+                                    <input type="file" id="uploadfile" name="uploadfile" readonly="readonly" class="form-control">
+                                    <input type="hidden" id="focuspicurl" name="focuspicurl" value="" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">图片链接：</label>
                                 <div class="col-sm-8">
-                                    <input id="userloginname" name="userloginname" class="form-control" type="text">
-
+                                    <input id="focuslinkurl" name="focuslinkurl" class="form-control" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">是否启用：</label>
                                 <div class="col-sm-8">
-                                    <input id="usernickname" name="usernickname" class="form-control error" type="text" aria-required="true" aria-invalid="true" class="error">
+                                    <input type="checkbox" id="focusenable" style="display:none;" class="js-switch" checked="checked" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">排序号：</label>
-                                <div class="col-sm-8">
-                                    <input id="password" name="password" class="form-control" type="password">
-
+                                <div class="col-sm-4">
+                                    <input id="focussort" name="focussort" class="form-control" type="number">
+                                    <span class="help-block"><i class="fa fa-info-circle"></i>排序号越大，越靠前</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">说明：</label>
                                 <div class="col-sm-8">
-                                    <textarea></textarea>
+                                    <textarea id="focusdescription" name="focusdescription" class="form-control" cols="50" rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-8 col-sm-offset-5">
-                                    <button class="btn btn-primary" type="submit">提交</button>
+                                    <button class="btn btn-success" type="submit">提交</button>
+
                                 </div>
                             </div>
                         </form>
@@ -169,11 +173,15 @@
     <script src="/static/js/jquery.min.js?v=2.1.4"></script>
     <script src="/static/js/plugins/hot/Jquery.util.js"></script>
     <script src="/static/js/bootstrap.min.js?v=3.3.5"></script>
-    <!--<script src="/static/js/content.min.js"></script>-->
+    <script src="/static/js/content.min.js"></script>
+    <script src="/static/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="/static/js/plugins/switchery/switchery.js"></script>
     <script src="/static/js/plugins/layer/layer.min.js"></script>
     <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="/static/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="/static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="/static/js/plugins/hot/bootstrap.hot.extra-validate.js"></script>
+    <script src="/static/js/plugins/ajaxfileupload.js"></script>
     <script src="/static/js/admin/focuspic.js"></script>
 </body>
 </html>

@@ -8,5 +8,6 @@ J:\HOT\CODE\bameng\BAMENG.CONFIG\bin\Debug\BAMENG.CONFIG.dll
 J:\HOT\CODE\bameng\BAMENG.CONFIG\bin\Debug\BAMENG.CONFIG.pdb
 J:\HOT\CODE\bameng\BAMENG.CONFIG\bin\Debug\HotCoreUtils.dll
 J:\HOT\CODE\bameng\BAMENG.CONFIG\bin\Debug\HotCoreUtils.xml
+J:\HOT\CODE\bameng\BAMENG.CONFIG\obj\Debug\BAMENG.CONFIG.csprojResolveAssemblyReference.cache
 J:\HOT\CODE\bameng\BAMENG.CONFIG\obj\Debug\BAMENG.CONFIG.dll
 J:\HOT\CODE\bameng\BAMENG.CONFIG\obj\Debug\BAMENG.CONFIG.pdb

@@ -131,6 +131,12 @@ namespace BAMENG.MODEL
         /// <value>The token.</value>
         public string token { get; set; }
 
+        /// <summary>
+        /// 盟主ID
+        /// </summary>
+        /// <value>The belong one.</value>
+        public int BelongOne { get; set; }
+
     }
 
 
@@ -815,4 +821,52 @@ namespace BAMENG.MODEL
         /// </summary>
         public int UserIndentity { get; set; }
     }
+
+
+
+    /// <summary>
+    /// 盟友奖励实体
+    /// </summary>
+    public class RewardsSettingModel {
+
+        public int ID { get; set;}
+
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// 提交客户信息奖励
+        /// </summary>
+        /// <value>The customer reward.</value>
+        public decimal CustomerReward { get; set; }
+
+
+        /// <summary>
+        /// 订单成交奖励
+        /// </summary>
+        /// <value>The order reward.</value>
+        public decimal OrderReward { get; set; }
+
+
+        /// <summary>
+        /// 客户进店奖励
+        /// </summary>
+        /// <value>The shop reward.</value>
+        public decimal ShopReward { get; set; }
+
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        /// <value>The update time.</value>
+        public DateTime UpdateTime { get; set; }
+
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        /// <value>The create time.</value>
+        public DateTime CreateTime { get; set; }
+    }
+
+
 }

@@ -18,7 +18,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight tooltip-demo">
         <!--search-->
-        <form role="form" class="search-panel">            
+        <form role="form" class="search-panel">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
@@ -53,11 +53,11 @@
                     <div class="ibox-content p-xxs no-top-border">
                         <div class="panel-body">
                             <div style="text-align:right;">
-                                <button type="button" class="btn btn-w-m btn-success" data-toggle="modal" data-target="#myModal2" onclick="shopHelper.dialog()">添加总店</button>
+                                <button type="button" class="btn btn-w-m btn-success" data-toggle="modal" data-target="#myModal2" onclick="shopHelper.dialog()">添加门店</button>
                             </div>
                             <table class="table table-bordered table-hover table-center">
                                 <thead>
-                                    <tr>                                        
+                                    <tr>
                                         <th>登录名</th>
                                         <th>总店名称</th>
                                         <th>联系人</th>
@@ -107,13 +107,13 @@
             <div class="modal-content animated flipInY">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title"><span id="modal-title"></span>总店信息</h4>
+                    <h4 class="modal-title"><span id="modal-title"></span>门店信息</h4>
                 </div>
                 <div class="modal-body">
                     <div>
                         <form class="form-horizontal m-t" id="signupForm">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">总店名称：</label>
+                                <label class="col-sm-3 control-label">门店名称：</label>
                                 <div class="col-sm-8">
                                     <input id="shopId" class="form-control" type="hidden" value="0" />
                                     <input id="shopname" name="shopname" class="form-control" type="text">
@@ -128,15 +128,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">门店地址：</label>
+                                <div class="col-sm-8">
+                                    <input id="shopaddress" name="shopaddress" class="form-control error" type="text" aria-required="true" aria-invalid="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">联系人：</label>
                                 <div class="col-sm-8">
-                                    <input id="username" name="username" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error">
+                                    <input id="username" name="username" class="form-control error" type="text" aria-required="true" aria-invalid="true" >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">联系手机：</label>
                                 <div class="col-sm-8">
-                                    <input id="usermobile" name="usermobile" class="form-control" type="number" aria-required="true" aria-invalid="true" class="error">
+                                    <input id="usermobile" name="usermobile" class="form-control error" type="number" aria-required="true" aria-invalid="true">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -156,7 +162,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">再次密码：</label>
                                 <div class="col-sm-8">
-                                    <input id="confirm_password" name="confirm_password" class="form-control" type="password">                                    
+                                    <input id="confirm_password" name="confirm_password" class="form-control" type="password">
                                 </div>
                             </div>
                             <div class="form-group">

@@ -40,14 +40,28 @@ namespace BAMENG.LOGIC
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static bool EditUserInfo(UserRegisterModel model)
+        public static bool EditUserInfo(UserRegisterModel model, ref ApiStatusCode apiCode)
         {
+            apiCode = ApiStatusCode.OK;
             using (var dal = FactoryDispatcher.UserFactory())
             {
                 if (model.UserId > 0)
-                    return dal.UpdateUserInfo(model);
+                {
+                    bool b = dal.UpdateUserInfo(model);
+                    if (!b)
+                        apiCode = ApiStatusCode.更新失败;
+                    return b;
+                }
                 else
-                    return dal.AddUserInfo(model) > 0;
+                {
+                    int flag = dal.AddUserInfo(model);
+                    if (flag == -1)
+                        apiCode = ApiStatusCode.账户已存在;
+                    else if (flag == 0)
+                        apiCode = ApiStatusCode.添加失败;
+
+                    return flag > 0;
+                }
             }
         }
 
@@ -177,7 +191,7 @@ namespace BAMENG.LOGIC
 
 
         /// <summary>
-        /// 登录
+        /// 后台登录
         /// </summary>
         /// <param name="loginName"></param>
         /// <param name="loginPassword"></param>
@@ -192,7 +206,76 @@ namespace BAMENG.LOGIC
         }
 
 
+        /// <summary>
+        /// Gets the user identifier by authentication token.
+        /// </summary>
+        /// <param name="Token">The token.</param>
+        /// <returns>System.Int32.</returns>
+        public static int GetUserIdByAuthToken(string Token)
+        {
+            using (var dal = FactoryDispatcher.UserFactory())
+            {
+                return dal.GetUserIdByAuthToken(Token);
+            }
+        }
 
 
+        /// <summary>
+        /// 设置盟友奖励
+        /// </summary>
+        /// <param name="userId">当前用户ID</param>
+        /// <param name="creward">客户资料提交奖励</param>
+        /// <param name="orderreward">订单成交奖励</param>
+        /// <param name="shopreward">客户进店奖励.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public static bool SetAllyRaward(int userId, decimal creward, decimal orderreward, decimal shopreward)
+        {
+            using (var dal = FactoryDispatcher.UserFactory())
+            {
+                RewardsSettingModel model = new RewardsSettingModel()
+                {
+                    UserId = userId,
+                    CustomerReward = creward,
+                    OrderReward = orderreward,
+                    ShopReward = shopreward
+                };
+                if (dal.IsRewarExist(userId))
+                    return dal.UpdateRewardSetting(model);
+                else
+                {
+                    return dal.AddRewardSetting(model) > 0;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        /// <param name="mobile">The mobile.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public static bool ForgetPwd(string mobile, string password)
+        {
+            using (var dal = FactoryDispatcher.UserFactory())
+            {
+                return dal.ForgetPwd(mobile, password);
+            }
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>        
+        /// <param name="oldPassword">The old password.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public static bool ChanagePassword(int userId, string oldPassword, string password)
+        {
+            using (var dal = FactoryDispatcher.UserFactory())
+            {
+                return dal.ChanagePassword(userId, oldPassword, password);
+            }
+        }
     }
 }

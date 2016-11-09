@@ -101,4 +101,76 @@ namespace BAMENG.MODEL
         public string authority { get; set; }
     }
 
+
+
+    public class SwtSmsVerificationModel
+    {
+        /// <summary>
+        /// SSV_ID
+        /// </summary>		
+        private int _ssv_id;
+        public int SSV_ID
+        {
+            get { return _ssv_id; }
+            set { _ssv_id = value; }
+        }
+        /// <summary>
+        /// SSV_Verification
+        /// </summary>		
+        private string _ssv_verification;
+        public string SSV_Verification
+        {
+            get { return _ssv_verification; }
+            set { _ssv_verification = value; }
+        }
+        /// <summary>
+        /// SSV_AddTime
+        /// </summary>		
+        private DateTime _ssv_addtime;
+        public DateTime SSV_AddTime
+        {
+            get { return _ssv_addtime; }
+            set { _ssv_addtime = value; }
+        }
+        /// <summary>
+        /// 0代表未失效，1代表失效
+        /// </summary>		
+        private int _ssv_isinvalid;
+        public int SSV_IsInvalid
+        {
+            get { return _ssv_isinvalid; }
+            set { _ssv_isinvalid = value; }
+        }
+        /// <summary>
+        /// SSV_Phone
+        /// </summary>		
+        private string _ssv_phone;
+        public string SSV_Phone
+        {
+            get { return _ssv_phone; }
+            set { _ssv_phone = value; }
+        }
+
+        public int SSV_CustomerId { set; get; }
+    }
+
+
+
+    public class ConfigModel
+    {
+        /// <summary>
+        /// 配置编码
+        /// </summary>
+        public string Code { get; set; }
+        /// <summary>
+        /// 配置值
+        /// </summary>
+        public string Value { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Remark { get; set; }
+
+    }
+
 }

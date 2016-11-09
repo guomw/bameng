@@ -46,10 +46,13 @@
   <ItemGroup>
     <Compile Include="AbstractDAL.cs" />
     <Compile Include="ArticleDAL.cs" />
+    <Compile Include="ConfigDAL.cs" />
     <Compile Include="CustomerDAL.cs" />
     <Compile Include="FocusPicDAL.cs" />
+    <Compile Include="LogDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopDAL.cs" />
+    <Compile Include="SmsVerifyDAL.cs" />
     <Compile Include="SystemDAL.cs" />
     <Compile Include="UserDAL.cs" />
   </ItemGroup>

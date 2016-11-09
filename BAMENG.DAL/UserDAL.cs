@@ -30,7 +30,7 @@ namespace BAMENG.DAL
         /// </summary>
         private const string APP_USER_SELECT = @"select ue.UserId,ue.UserIdentity,ue.MerchantID,ue.ShopId,ue.IsActive,ue.Score,ue.ScoreLocked,ue.MengBeans,ue.MengBeansLocked,ue.CreateTime
                             ,U.UB_UserLoginName as LoginName,U.UB_UserRealName as RealName,U.UB_UserNickName as NickName,U.UB_UserMobile as UserMobile,U.UB_WxHeadImg as UserHeadImg
-                            ,S.ShopName,S.ShopProv,S.ShopCity,L.UL_LevelName as LevelName
+                            ,S.ShopName,S.ShopProv,S.ShopCity,L.UL_LevelName as LevelName,U.UB_BelongOne as BelongOne
                              from BM_User_extend ue
                             inner join Hot_UserBaseInfo U with(nolock) on U.UB_UserID =ue.UserId
                             left join BM_ShopManage S with(nolock) on S.ShopID=ue.ShopId
@@ -76,6 +76,17 @@ namespace BAMENG.DAL
                 else
                     return 0;
             }
+        }
+
+
+        public bool IsExist(string loginName)
+        {
+            string strSql = "select COUNT(1) from Hot_UserBaseInfo U with(nolock) where U.UB_UserLoginName=@UB_UserLoginName and U.UB_CustomerID=@UB_CustomerID";
+            var param = new[] {
+                new SqlParameter("@UB_UserLoginName",loginName),
+                new SqlParameter("@UB_CustomerID",ConstConfig.storeId),
+            };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, param)) > 0;
         }
 
 
@@ -153,7 +164,12 @@ namespace BAMENG.DAL
                         };
             using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, param))
             {
-                return DbHelperSQLP.GetEntity<UserModel>(dr);
+                var data = DbHelperSQLP.GetEntity<UserModel>(dr);
+
+                //TODO:
+                data.CustomerAmount = 100;
+                data.OrderSuccessAmount = 10;
+                return data;
             }
 
         }
@@ -172,8 +188,8 @@ namespace BAMENG.DAL
         /// <returns></returns>
         private int AddUserBaseInfoModel(int storeId, string mobile, string loginName, string password, string userName, string nickName, int belongOne, int levelId = 0)
         {
-            if (UserExist(mobile, storeId))
-                return 0;
+            if (UserExist(loginName, storeId))
+                return -1;
             UserBaseInfoModel model = new UserBaseInfoModel();
             model.UB_UserLoginName = loginName;
             model.UB_UserLoginPassword = password;
@@ -723,28 +739,8 @@ namespace BAMENG.DAL
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
-        /// 登录
+        /// 后台登录
         /// </summary>
         /// <param name="loginName"></param>
         /// <param name="loginPassword"></param>
@@ -770,5 +766,213 @@ namespace BAMENG.DAL
 
 
 
+        /// <summary>
+        /// 前端登录
+        /// </summary>
+        /// <param name="loginName">Name of the login.</param>
+        /// <param name="loginPassword">The login password.</param>
+        /// <returns>UserModel.</returns>
+        public UserModel Login(string loginName, string loginPassword)
+        {
+            string strSql = APP_USER_SELECT + " and U.UB_UserLoginName=@LoginName and U.UB_UserLoginPassword=@LoginPassword";
+            SqlParameter[] parm = {
+                   new SqlParameter("@LoginName", loginName),
+                   new SqlParameter("@LoginPassword", loginPassword)
+            };
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, parm))
+            {
+                return DbHelperSQLP.GetEntity<UserModel>(dr);
+            }
+        }
+
+        /// <summary>
+        /// 添加用户授权token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="Token">The token.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public bool AddUserAuthToken(int UserId, string Token)
+        {
+            string strSql = "insert into BM_AuthToken(UserId,Token) values(@UserId,@Token)";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UserId", UserId),
+                   new SqlParameter("@Token", Token)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, parm) > 0;
+        }
+
+        /// <summary>
+        /// 更新用户授权token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="Token">The token.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool UpdateUserAuthToken(int UserId, string Token)
+        {
+            string strSql = "update BM_AuthToken set Token=@Token,UpdateTime=getdate() where UserId=@UserId";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UserId", UserId),
+                   new SqlParameter("@Token", Token)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, parm) > 0;
+        }
+
+        /// <summary>
+        /// 判断授权token是否存在
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns>true if [is authentication token exist] [the specified user identifier]; otherwise, false.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool IsAuthTokenExist(int UserId)
+        {
+            string strSql = "select COUNT(1) from BM_AuthToken where UserId=@UserId";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UserId", UserId),
+            };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm)) > 0;
+        }
+
+        /// <summary>
+        /// 根据用户ID，获取用户token
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public string GetAuthTokenByUserId(int UserId)
+        {
+            string strSql = "select Token from BM_AuthToken where UserId=@UserId";
+            SqlParameter[] parm = {
+                   new SqlParameter("@UserId", UserId),
+            };
+            object obj = DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm);
+            if (obj != null)
+                return obj.ToString();
+            else
+                return string.Empty;
+        }
+
+        /// <summary>
+        /// 根据用户token，获取用户ID
+        /// </summary>
+        /// <param name="Token">The token.</param>
+        /// <returns>System.Int32.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public int GetUserIdByAuthToken(string Token)
+        {
+            string strSql = "select UserId from BM_AuthToken where Token=@Token";
+            SqlParameter[] parm = {
+                   new SqlParameter("@Token", Token),
+            };
+            object obj = DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, parm);
+            if (obj != null)
+                return Convert.ToInt32(obj);
+            else
+                return 0;
+        }
+
+        /// <summary>
+        /// 添加盟友奖励设置
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>System.Int32.</returns>
+        public int AddRewardSetting(RewardsSettingModel model)
+        {
+            string strSql = "insert into BM_RewardsSetting(UserId,CustomerReward,OrderReward,ShopReward) values(@UserId,@CustomerReward,@OrderReward,@ShopReward)";
+            SqlParameter[] param = {
+                new SqlParameter("@UserId", model.UserId),
+                new SqlParameter("@CustomerReward", model.CustomerReward),
+                new SqlParameter("@OrderReward", model.OrderReward),
+                new SqlParameter("@ShopReward", model.ShopReward)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
+        }
+
+        /// <summary>
+        /// 更新盟友奖励设置
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public bool UpdateRewardSetting(RewardsSettingModel model)
+        {
+            string strSql = "update  BM_RewardsSetting set CustomerReward=@CustomerReward,OrderReward=@OrderReward,ShopReward=@ShopReward,UpdateTime=@UpdateTime where UserId=@UserId";
+            SqlParameter[] param = {
+                new SqlParameter("@UserId", model.UserId),
+                new SqlParameter("@CustomerReward", model.CustomerReward),
+                new SqlParameter("@OrderReward", model.OrderReward),
+                new SqlParameter("@ShopReward", model.ShopReward),
+                new SqlParameter("@UpdateTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+        }
+
+        /// <summary>
+        ///获取盟友奖励信息
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>RewardsSettingModel.</returns>
+        public RewardsSettingModel GetRewardModel(int userId)
+        {
+            string strSql = "select top 1 UserId,CustomerReward,OrderReward,ShopReward,UpdateTime,CreateTime from BM_RewardsSetting where UserId=@UserId";
+            SqlParameter[] param = {
+                new SqlParameter("@UserId", userId)
+            };
+
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, param))
+            {
+                return DbHelperSQLP.GetEntity<RewardsSettingModel>(dr);
+            }
+        }
+
+        /// <summary>
+        /// 判断当前盟主的盟友奖励是否存在
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>true if [is rewar exist] [the specified user identifier]; otherwise, false.</returns>
+        public bool IsRewarExist(int userId)
+        {
+            string strSql = "select COUNT(1) from BM_RewardsSetting where UserId=@UserId";
+            SqlParameter[] param = {
+                new SqlParameter("@UserId", userId)
+            };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, param)) > 0;
+        }
+
+
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        /// <param name="mobile">The mobile.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public bool ForgetPwd(string mobile, string password)
+        {
+            string strSql = "update Hot_UserBaseInfo set UB_UserLoginPassword=@UB_UserLoginPassword where UB_CustomerID=@UB_CustomerID and UB_UserMobile=@UB_UserMobile ";
+            SqlParameter[] param = {
+                new SqlParameter("@UB_UserLoginPassword",password),
+                new SqlParameter("@UB_CustomerID", ConstConfig.storeId),
+                new SqlParameter("@UB_UserMobile", mobile)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>        
+        /// <param name="oldPassword">The old password.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public bool ChanagePassword(int userId,string oldPassword, string password)
+        {
+            string strSql = "update Hot_UserBaseInfo set UB_UserLoginPassword=@UB_UserLoginPassword where UB_CustomerID=@UB_CustomerID and UB_UserID=@UB_UserID and UB_UserLoginPassword=@OldPassword ";
+            SqlParameter[] param = {
+                new SqlParameter("@UB_UserLoginPassword",password),
+                new SqlParameter("@UB_CustomerID", ConstConfig.storeId),
+                new SqlParameter("@UB_UserID", userId),
+                new SqlParameter("@OldPassword",oldPassword)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+        }
     }
 }

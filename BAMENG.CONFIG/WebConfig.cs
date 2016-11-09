@@ -37,5 +37,69 @@ namespace BAMENG.CONFIG
                 return false;
             }
         }
+
+
+        /// <summary>
+        /// 资源网站域名
+        /// </summary>
+        /// <returns>System.String.</returns>
+        public static string reswebsite()
+        {
+            return ConfigHelper.GetConfigString("reswebsite", "");
+        }
+
+        /// <summary>
+        /// 资讯详情域名
+        /// </summary>
+        /// <returns>System.String.</returns>
+        public static string articleDetailsDomain()
+        {
+            return ConfigHelper.GetConfigString("articledetailsdomain", "");
+        }
+
+
+
+        #region 短信接口相关配置
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string SMSURL()
+        {
+            return ConfigHelper.GetConfigString("SMSURL", "");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string SMSAcount()
+        {
+            return ConfigHelper.GetConfigString("SMSAcount", "");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string SMSAcountPassword()
+        {
+            return ConfigHelper.GetConfigString("SMSAcountPassword", "");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string SMSVoiceAcount()
+        {
+            return ConfigHelper.GetConfigString("SMSVoiceAcount", "");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string SMSVoiceAcountPassword()
+        {
+            return ConfigHelper.GetConfigString("SMSVoiceAcountPassword", "");
+        }
+        #endregion
     }
 }

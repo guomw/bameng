@@ -41,9 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IArticleDAL.cs" />
+    <Compile Include="IConfigDAL.cs" />
     <Compile Include="ICustomerDAL.cs" />
     <Compile Include="IFocusPicDAL.cs" />
+    <Compile Include="ILogDAL.cs" />
     <Compile Include="IShopDAL.cs" />
+    <Compile Include="ISmsProvider.cs" />
     <Compile Include="ISystemDAL.cs" />
     <Compile Include="IUserDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -185,6 +185,11 @@ var userHelper = {
             $(".allyText").text("客户信息提交量");
             $("#allyLable").text("盟友名称")
         }
+
+        var SHOP_INDENTITY = hotUtil.GetCookie("SHOP_INDENTITY");
+        if (SHOP_INDENTITY != 0 && this.isAlly != 1) {
+            $("#btnUser").show();
+        }
     },
     validate: function () {
         var e = "<i class='fa fa-times-circle'></i> ";

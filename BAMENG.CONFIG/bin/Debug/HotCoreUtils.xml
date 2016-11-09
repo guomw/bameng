@@ -444,192 +444,6 @@
             <param name="para"></param>
             <param name="type"></param>
         </member>
-        <member name="T:HotCoreUtils.DB.DBHelper">
-            <summary>
-            通用数据库访问类，封装了多个数据的常见操作  
-            描述: 尚未编写描述
-            作者：郭孟稳
-            时间：2016/08/02 16:51:10
-            </summary>	
-        </member>
-        <member name="P:HotCoreUtils.DB.DBHelper.ConnectionString">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.#ctor(System.String,HotCoreUtils.DB.DbProviderType)">
-            <summary>  
-            构造函数  
-            </summary>  
-            <param name="connectionString">数据库连接字符串</param>  
-            <param name="providerType">数据库类型枚举，参见<paramref name="providerType"/></param>  
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteNonQuery(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter})">
-            <summary>     
-            对数据库执行增删改操作，返回受影响的行数。     
-            </summary>     
-            <param name="sql">要执行的增删改的SQL语句</param>     
-            <param name="parameters">执行增删改语句所需要的参数</param>  
-            <returns></returns>    
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteNonQuery(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter},System.Data.CommandType)">
-            <summary>     
-            对数据库执行增删改操作，返回受影响的行数。     
-            </summary>     
-            <param name="sql">要执行的增删改的SQL语句</param>     
-            <param name="parameters">执行增删改语句所需要的参数</param>  
-            <param name="commandType">执行的SQL语句的类型</param>  
-            <returns></returns>  
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteReader(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter})">
-            <summary>     
-            执行一个查询语句，返回一个关联的DataReader实例     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>  
-            <returns></returns>   
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteReader(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter},System.Data.CommandType)">
-            <summary>     
-            执行一个查询语句，返回一个关联的DataReader实例     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>  
-            <param name="commandType">执行的SQL语句的类型</param>  
-            <returns></returns>   
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteDataTable(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter})">
-            <summary>     
-            执行一个查询语句，返回一个包含查询结果的DataTable     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>  
-            <returns></returns>  
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteDataTable(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter},System.Data.CommandType)">
-            <summary>     
-            执行一个查询语句，返回一个包含查询结果的DataTable     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>  
-            <param name="commandType">执行的SQL语句的类型</param>  
-            <returns></returns>  
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteScalar(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter})">
-            <summary>     
-            执行一个查询语句，返回查询结果的第一行第一列     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>     
-            <returns></returns>     
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.ExecuteScalar(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter},System.Data.CommandType)">
-            <summary>     
-            执行一个查询语句，返回查询结果的第一行第一列     
-            </summary>     
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>     
-            <param name="commandType">执行的SQL语句的类型</param>  
-            <returns></returns>     
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.CreateDbParameter(System.String,System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="name"></param>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.CreateDbParameter(System.String,System.Data.ParameterDirection,System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="name"></param>
-            <param name="parameterDirection"></param>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:HotCoreUtils.DB.DBHelper.CreateDbCommand(System.String,System.Collections.Generic.IList{System.Data.Common.DbParameter},System.Data.CommandType)">
-            <summary>  
-            创建一个DbCommand对象  
-            </summary>  
-            <param name="sql">要执行的查询语句</param>     
-            <param name="parameters">执行SQL查询语句所需要的参数</param>  
-            <param name="commandType">执行的SQL语句的类型</param>  
-            <returns></returns>  
-        </member>
-        <member name="T:HotCoreUtils.DB.DbProviderType">
-            <summary>  
-            数据库类型枚举  
-            </summary>  
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.SqlServer">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.MySql">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.SQLite">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.Oracle">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.ODBC">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:HotCoreUtils.DB.DbProviderType.OleDb">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:HotCoreUtils.DB.ProviderFactory">
-            <summary>  
-            DbProviderFactory工厂类  
-            </summary>  
-        </member>
-        <member name="M:HotCoreUtils.DB.ProviderFactory.#cctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:HotCoreUtils.DB.ProviderFactory.getproviderInvariantNames">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:HotCoreUtils.DB.ProviderFactory.GetProviderInvariantName(HotCoreUtils.DB.DbProviderType)">
-            <summary>  
-            获取指定数据库类型对应的程序集名称  
-            </summary>  
-            <param name="providerType">数据库类型枚举</param>  
-            <returns></returns>  
-        </member>
-        <member name="M:HotCoreUtils.DB.ProviderFactory.GetDbProviderFactory(HotCoreUtils.DB.DbProviderType)">
-            <summary>  
-            获取指定类型的数据库对应的DbProviderFactory  
-            </summary>  
-            <param name="providerType">数据库类型枚举</param>  
-            <returns></returns>  
-        </member>
-        <member name="M:HotCoreUtils.DB.ProviderFactory.ImportDbProviderFactory(HotCoreUtils.DB.DbProviderType)">
-            <summary>  
-            加载指定数据库类型的DbProviderFactory  
-            </summary>  
-            <param name="providerType">数据库类型枚举</param>  
-            <returns></returns>  
-        </member>
         <member name="T:HotCoreUtils.DB.DbHelperSQL">
             <summary>
             数据访问抽象基础类
@@ -2903,6 +2717,92 @@
             </summary>
             <param name="sFileName">文件名</param>
             <param name="sAllowExt">如：【*.jpg;*.jpeg;*.gif;*.png;】或者【.jpg|.jpeg|.gif|.png】</param>
+            <returns></returns>
+        </member>
+        <member name="T:HotCoreUtils.Uploader.ImageHelper">
+            <summary>
+            图片处理类
+            </summary>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.SaveSmallImage(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="fileName"></param>
+            <param name="newFile"></param>
+            <param name="maxHeight"></param>
+            <param name="maxWidth"></param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.SaveSmallImage(System.IO.Stream,System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="fileStream"></param>
+            <param name="newFile"></param>
+            <param name="maxHeight"></param>
+            <param name="maxWidth"></param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.CutForSquare(System.Web.HttpPostedFile,System.String,System.Int32,System.Int32)">
+            <summary>
+            正方型裁剪
+            以图片中心为轴心，截取正方型，然后等比缩放
+            用于头像处理
+            </summary>
+            <param name="postedFile">原图HttpPostedFile对象</param>
+            <param name="fileSaveUrl">缩略图存放地址</param>
+            <param name="side">指定的边长（正方型）</param>
+            <param name="quality">质量（范围0-100）</param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.CutForSquare(System.IO.Stream,System.String,System.Int32,System.Int32)">
+            <summary>
+            正方型裁剪
+            以图片中心为轴心，截取正方型，然后等比缩放
+            用于头像处理
+            </summary>
+            <param name="fromFile">原图HttpPostedFile对象</param>
+            <param name="fileSaveUrl">缩略图存放地址</param>
+            <param name="side">指定的边长（正方型）</param>
+            <param name="quality">质量（范围0-100）</param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.CutForCustom(System.IO.Stream,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            指定长宽裁剪
+            按模版比例最大范围的裁剪图片并缩放至模版尺寸
+            </summary>
+            <param name="stream">原图HttpPostedFile对象</param>
+            <param name="fileSaveUrl">保存路径</param>
+            <param name="maxWidth">最大宽(单位:px)</param>
+            <param name="maxHeight">最大高(单位:px)</param>
+            <param name="quality">质量（范围0-100）</param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.ZoomAuto(System.Web.HttpPostedFileBase,System.String,System.Double,System.Double,System.String,System.String)">
+            <summary>
+            图片等比缩放
+            </summary>
+            <param name="postedFile">原图HttpPostedFile对象</param>
+            <param name="savePath">缩略图存放地址</param>
+            <param name="targetWidth">指定的最大宽度</param>
+            <param name="targetHeight">指定的最大高度</param>
+            <param name="watermarkText">水印文字(为""表示不使用水印)</param>
+            <param name="watermarkImage">水印图片路径(为""表示不使用水印)</param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.ZoomAuto(System.IO.Stream,System.String,System.Double,System.Double,System.String,System.String)">
+            <summary>
+            图片等比缩放
+            </summary>
+            <param name="stream">原图HttpPostedFile对象</param>
+            <param name="savePath">缩略图存放地址</param>
+            <param name="targetWidth">指定的最大宽度</param>
+            <param name="targetHeight">指定的最大高度</param>
+            <param name="watermarkText">水印文字(为""表示不使用水印)</param>
+            <param name="watermarkImage">水印图片路径(为""表示不使用水印)</param>
+        </member>
+        <member name="M:HotCoreUtils.Uploader.ImageHelper.IsWebImage(System.String)">
+            <summary>
+            判断文件类型是否为WEB格式图片
+            (注：JPG,GIF,BMP,PNG)
+            </summary>
+            <param name="contentType">HttpPostedFile.ContentType</param>
             <returns></returns>
         </member>
         <member name="M:HotCoreUtils.Uploader.UploadConfigHelper.GetUploadConfigInfoByKey(System.String)">

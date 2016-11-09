@@ -77,5 +77,35 @@ namespace BAMENG.LOGIC
         {
             return new FocusPicDAL();
         }
+
+        /// <summary>
+        /// 短信
+        /// </summary>
+        /// <returns>ISmsProvider.</returns>
+        public static ISmsProvider SmsFactory()
+        {
+            return new SmsVerifyDAL();
+        }
+
+
+        /// <summary>
+        /// 日志
+        /// </summary>
+        /// <returns>ILogDAL.</returns>
+        public static ILogDAL LogFactory()
+        {
+            return new LogDAL();
+        }
+
+
+        /// <summary>
+        /// 配置
+        /// </summary>
+        /// <returns>IConfigDAL.</returns>
+        public static IConfigDAL ConfigFactory()
+        {
+            return new ConfigDAL();
+        }
+
     }
 }

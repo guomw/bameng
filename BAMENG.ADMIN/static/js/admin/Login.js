@@ -27,10 +27,17 @@ var loginHelper = {
             swal("请输入登录密码", "", "warning")
             return false;
         }
+
+        var loginType = 0;
+        $("input[name='radioInline']").each(function (i, v) {
+            if ($(this).attr("data-check") == "true")
+                loginType = $(this).val();
+        });
+
         var postData = {
             loginName: $("#loginName").val(),
             password: $("#loginPassword").val(),
-            loginType: 0 /*0总后台，1门店**/
+            loginType: loginType /*0总后台，1门店**/
         }
         $(".btn-success").unbind("click");
         $(".btn-success").text("正在登录...");
@@ -59,5 +66,11 @@ var loginHelper = {
 };
 
 $(function () {
+    $("input[name='radioInline']").change(function () {
+        $("input[name='radioInline']").removeAttr("data-check");
+        if (!$(this).attr("data-check")) {
+            $(this).attr("data-check", "true");
+        }
+    });
     loginHelper.init();
 });

@@ -99,12 +99,14 @@
   <ItemGroup>
     <Content Include="admin\articleedit.html" />
     <Content Include="admin\articlelist.html" />
+    <Content Include="admin\basesetting.html" />
     <Content Include="admin\focuspic.html" />
     <Content Include="admin\shoplist.html" />
     <Content Include="admin\userdetails.html" />
     <Content Include="admin\userlevel.html" />
     <Content Include="admin\customerlist.html" />
     <Content Include="admin\userlist.html" />
+    <Content Include="article\details.html" />
     <Content Include="index.html" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
@@ -113,11 +115,16 @@
     <Content Include="static\css\.DS_Store" />
     <Content Include="static\css\plugins\footable\fonts\footable.eot_" />
     <Content Include="static\css\plugins\jqgrid\ui.jqgrid.css_0820" />
+    <Content Include="static\css\weui.min-bm-diy.css" />
     <Content Include="static\fonts\fontawesome-webfont.eot_" />
     <Content Include="static\fonts\glyphicons-halflings-regular.eot_" />
+    <Content Include="static\img\sj%403x.png" />
+    <Content Include="static\img\ydll%403x.png" />
     <Content Include="static\js\.DS_Store" />
+    <Content Include="static\js\admin\apparticle.js" />
     <Content Include="static\js\admin\articleedit.js" />
     <Content Include="static\js\admin\articlelist.js" />
+    <Content Include="static\js\admin\basesetting.js" />
     <Content Include="static\js\admin\Login.js" />
     <Content Include="static\js\admin\userdetails.js" />
     <Content Include="static\js\admin\userlevel.js" />
@@ -140,6 +147,7 @@
     <Content Include="handler\Login.ashx" />
     <Content Include="handler\Logout.ashx" />
     <Content Include="handler\UploadFileEidt.ashx" />
+    <Content Include="handler\articleInfo.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -522,6 +530,10 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="handler\articleInfo.ashx.cs">
+      <DependentUpon>articleInfo.ashx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="handler\HQ.ashx.cs">
       <DependentUpon>HQ.ashx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -553,6 +565,7 @@
       <Name>BAMENG.MODEL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

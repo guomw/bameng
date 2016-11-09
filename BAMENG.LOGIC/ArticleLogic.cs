@@ -35,6 +35,34 @@ namespace BAMENG.LOGIC
         }
 
         /// <summary>
+        /// 获取资讯列表
+        /// </summary>
+        /// <param name="AuthorIdentity">作者身份类型，0集团，1总店，2分店  3盟主 4盟友</param>
+        /// <param name="pageindex">The pageindex.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>ResultPageModel.</returns>
+        public static ResultPageModel GetAppArticleList(int AuthorIdentity, int pageindex, int pageSize, int userId)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.GetAppArticleList(AuthorIdentity, pageindex, pageSize, userId);
+            }
+        }
+        /// <summary>
+        /// 获取置顶资讯数据
+        /// </summary>
+        /// <param name="AuthorIdentity">The author identity.</param>
+        /// <returns>List&lt;ArticleBaseModel&gt;.</returns>
+        public static List<ArticleBaseModel> GetAppTopArticleList(int AuthorIdentity)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.GetAppTopArticleList(AuthorIdentity);
+            }
+        }
+
+        /// <summary>
         /// 编辑资讯信息
         /// </summary>
         /// <param name="model"></param>
@@ -49,6 +77,15 @@ namespace BAMENG.LOGIC
                     return dal.AddArticle(model) > 0;
             }
         }
+
+        public static int AddArticle(ArticleModel model)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.AddArticle(model);
+            }
+        }
+
 
         /// <summary>
         /// 设置资讯置顶状态
@@ -108,7 +145,7 @@ namespace BAMENG.LOGIC
         /// <param name="status">-1 审核失败 1审核成功</param>
         /// <param name="remark">The remark.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public static bool SetArticleStatus(int articleId, int status,string remark)
+        public static bool SetArticleStatus(int articleId, int status, string remark)
         {
             using (var dal = FactoryDispatcher.ArticleFactory())
             {
@@ -117,6 +154,18 @@ namespace BAMENG.LOGIC
         }
 
 
+        /// <summary>
+        /// 更新资讯浏览量
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public static bool UpdateArticleAmount(int articleId)
+        {
+            using (var dal = FactoryDispatcher.ArticleFactory())
+            {
+                return dal.UpdateArticleAmount(articleId);
+            }
+        }
 
     }
 }

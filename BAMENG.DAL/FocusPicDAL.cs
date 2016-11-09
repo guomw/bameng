@@ -36,7 +36,17 @@ namespace BAMENG.DAL
         /// <exception cref="System.NotImplementedException"></exception>
         public int AddFocusPic(FocusPicModel model)
         {
-            throw new NotImplementedException();
+            string strSql = @"insert into BM_BannerManage(Type,Title,PicUrl,Description,IsEnable,Sort,LinkUrl) values(@Type,@Title,@PicUrl,@Description,@IsEnable,@Sort,@LinkUrl)";
+            var param = new[] {
+                new SqlParameter("@Title",model.Title),
+                new SqlParameter("@PicUrl",model.PicUrl),
+                new SqlParameter("@Description",model.Description),
+                new SqlParameter("@IsEnable",model.IsEnable),
+                new SqlParameter("@Sort",model.Sort),
+                new SqlParameter("@LinkUrl",model.LinkUrl),
+                new SqlParameter("@Type",model.Type)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
         }
 
         /// <summary>
@@ -47,7 +57,11 @@ namespace BAMENG.DAL
         /// <exception cref="System.NotImplementedException"></exception>
         public bool DeleteFocusPic(int fid)
         {
-            throw new NotImplementedException();
+            string strSql = "delete from BM_BannerManage where ID=@ID";
+            var param = new[] {
+                new SqlParameter("@ID",fid)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
         }
 
         /// <summary>
@@ -71,6 +85,35 @@ namespace BAMENG.DAL
                 strSql += string.Format(" and Title like '%{0}%' ", model.key);
             }
             return getPageData<FocusPicModel>(model.PageSize, model.PageIndex, strSql, "Sort");
+        }
+        /// <summary>
+        /// 获取轮播图
+        /// </summary>
+        /// <param name="type">0 资讯轮播图 1首页轮播图</param>
+        /// <returns>List&lt;FocusPicModel&gt;.</returns>
+        public List<FocusPicModel> GetAppList(int type)
+        {
+            string strSql = APP_SELECT + "  and IsEnable =1 ";
+            //0 资讯轮播图 1首页轮播图
+            if (type == 0)
+                strSql += " and Type=0 ";
+            else
+                strSql += " and Type=2 ";
+
+            strSql += " order by Sort desc";
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql))
+            {
+                List<FocusPicModel> data = DbHelperSQLP.GetEntityList<FocusPicModel>(dr);
+                if (data != null)
+                {
+                    data.ForEach((item) =>
+                    {
+
+                        item.PicUrl = WebConfig.reswebsite() + item.PicUrl;
+                    });
+                }
+                return data;
+            }
         }
 
         /// <summary>
@@ -96,7 +139,19 @@ namespace BAMENG.DAL
         /// <exception cref="System.NotImplementedException"></exception>
         public bool UpdateFocusPic(FocusPicModel model)
         {
-            throw new NotImplementedException();
+            string strSql = @"update BM_BannerManage set 
+                            Title = @Title,PicUrl = @PicUrl,Description = @Description,IsEnable = @IsEnable,Sort = @Sort,LinkUrl = @LinkUrl
+                            where ID = @ID";
+            var param = new[] {
+                new SqlParameter("@Title",model.Title),
+                new SqlParameter("@PicUrl",model.PicUrl),
+                new SqlParameter("@Description",model.Description),
+                new SqlParameter("@IsEnable",model.IsEnable),
+                new SqlParameter("@Sort",model.Sort),
+                new SqlParameter("@LinkUrl",model.LinkUrl),
+                new SqlParameter("@ID",model.ID)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
         }
     }
 }

@@ -28,6 +28,26 @@ namespace BAMENG.IDAL
         /// <returns></returns>
         ResultPageModel GetArticleList(int AuthorId, int AuthorIdentity, SearchModel model);
 
+
+
+        /// <summary>
+        /// 获取资讯列表--APP
+        /// </summary>
+        /// <param name="AuthorIdentity">作者身份类型，0集团，1总店，2分店  3盟主 4盟友</param>
+        /// <param name="pageindex">The pageindex.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>ResultPageModel.</returns>
+        ResultPageModel GetAppArticleList(int AuthorIdentity, int pageindex, int pageSize, int userId);
+
+
+        /// <summary>
+        /// 获取置顶资讯数据
+        /// </summary>
+        /// <param name="AuthorIdentity">The author identity.</param>
+        /// <returns>List&lt;ArticleBaseModel&gt;.</returns>
+        List<ArticleBaseModel> GetAppTopArticleList(int AuthorIdentity);
+
         /// <summary>
         /// 获取资讯信息
         /// </summary>
@@ -78,7 +98,15 @@ namespace BAMENG.IDAL
         /// <param name="status">The status.</param>
         /// <param name="remark">备注</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        bool SetArticleStatus(int articleId,int status,string remark);
+        bool SetArticleStatus(int articleId, int status, string remark);
+
+
+        /// <summary>
+        /// 更新资讯浏览量
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool UpdateArticleAmount(int articleId);
 
     }
 }

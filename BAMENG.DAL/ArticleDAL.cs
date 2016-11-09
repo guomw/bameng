@@ -42,7 +42,7 @@ namespace BAMENG.DAL
             string strSql = @"insert into BM_ArticleList(AuthorId,AuthorName,AuthorIdentity,SendTargetId,SendType,ArticleSort,ArticleType,ArticleClassify
                                 ,ArticleTitle,ArticleIntro,ArticleCover,ArticleBody,EnableTop,EnablePublish,ArticleStatus,TopTime,PublishTime)
                                 values(@AuthorId,@AuthorName,@AuthorIdentity,@SendTargetId,@SendType,@ArticleSort,@ArticleType,@ArticleClassify
-                                ,@ArticleTitle,@ArticleIntro,@ArticleCover,@ArticleBody,@EnableTop,@EnablePublish,@ArticleStatus,@TopTime,@PublishTime)";
+                                ,@ArticleTitle,@ArticleIntro,@ArticleCover,@ArticleBody,@EnableTop,@EnablePublish,@ArticleStatus,@TopTime,@PublishTime);select @@IDENTITY";
             var param = new[] {
                         new SqlParameter("@AuthorId", model.AuthorId),
                         new SqlParameter("@AuthorName", model.AuthorName),
@@ -62,7 +62,15 @@ namespace BAMENG.DAL
                         new SqlParameter("@TopTime",model.TopTime),
                         new SqlParameter("@PublishTime",model.PublishTime)
             };
-            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
+            object obj = DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql.ToString(), param);
+            if (obj == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
         }
         /// <summary>
         /// 删除资讯
@@ -103,8 +111,8 @@ namespace BAMENG.DAL
                         break;
                 }
             }
-            if (AuthorId > 0)
-                strSql += " and A.AuthorId=@AuthorId ";
+            //if (AuthorId > 0)
+            //    strSql += " and A.AuthorId=@AuthorId ";
 
             if (model.Status != -100)
             {
@@ -117,16 +125,16 @@ namespace BAMENG.DAL
                  * 
                 */
 
-
+                //AuthorIdentity 0集团，1总店，2分店  3盟主 4盟友
                 if (model.Status == 1)
                 {
                     //如果不是总后台身份
                     if (AuthorIdentity != 0)
                         strSql += " and A.AuthorIdentity=@AuthorIdentity ";
                     else
-                        strSql += " and A.ArticleStatus=1 ";
+                        strSql += " and A.ArticleStatus=1  and A.AuthorId=@AuthorId ";
                 }
-                else
+                else if (model.Status == 0)
                 {
                     //这里只有总后台才有入口进来
                     if (AuthorIdentity == 0)
@@ -135,7 +143,7 @@ namespace BAMENG.DAL
                         strSql += " and A.AuthorIdentity in (1,2) ";
                     }
                     else
-                        strSql += " and A.AuthorIdentity=@AuthorIdentity";
+                        strSql += " and A.AuthorIdentity=@AuthorIdentity and A.AuthorId=@AuthorId ";
                 }
             }
 
@@ -153,6 +161,83 @@ namespace BAMENG.DAL
             //生成sql语句
             return getPageData<ArticleModel>(model.PageSize, model.PageIndex, strSql, "A.CreateTime", false, param);
         }
+
+
+        /// <summary>
+        /// 获取资讯列表--APP
+        /// </summary>
+        /// <param name="AuthorIdentity">作者身份类型，0集团，1总店，2分店  3盟主 4盟友</param>
+        /// <param name="pageindex">The pageindex.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>ResultPageModel.</returns>
+        public ResultPageModel GetAppArticleList(int AuthorIdentity, int pageindex, int pageSize, int userId)
+        {
+            ResultPageModel result = new ResultPageModel();
+            string strSql = @"select A.ArticleId,a.ArticleTitle,a.ArticleIntro,a.ArticleCover,a.BrowseAmount,a.PublishTime {1}
+                                 from BM_ArticleList A with(nolock)
+                                 {0}
+                                 where a.IsDel=0 and a.EnableTop=0 and A.ArticleStatus=1";
+
+            string whereSql = string.Empty, wherefield = string.Empty;
+            if (AuthorIdentity == 3)
+            {
+                //TODO:
+                strSql += " and A.SendTargetId=@SendTargetId";
+            }
+            else if (AuthorIdentity == 4)
+            {
+                wherefield = ",ISNULL(R.IsRead,0) as IsRead";
+                whereSql = " left join BM_ReadLog R with(nolock) on R.ArticleId=A.ArticleId and R.UserId=@SendTargetId ";
+            }
+            strSql += " and A.AuthorIdentity=@AuthorIdentity";
+            strSql = string.Format(strSql, whereSql, wherefield);
+            var param = new[] {
+                new SqlParameter("@AuthorIdentity", AuthorIdentity),
+                new SqlParameter("@SendTargetId", userId),
+            };
+            //生成sql语句
+            return getPageData<ArticleBaseModel>(pageSize, pageindex, strSql, "A.ArticleSort", param, (items) =>
+            {
+                items.ForEach((item) =>
+                {
+                    item.ArticleUrl = string.Format("{0}/article/details.html?articleId={1}&idt={2}", WebConfig.articleDetailsDomain(), item.ArticleId, AuthorIdentity);
+                    item.ArticleCover = WebConfig.reswebsite() + item.ArticleCover;
+                });
+            });
+        }
+
+        /// <summary>
+        /// 获取置顶资讯数据
+        /// </summary>
+        /// <param name="AuthorIdentity">The author identity.</param>
+        /// <returns>List&lt;ArticleBaseModel&gt;.</returns>
+        public List<ArticleBaseModel> GetAppTopArticleList(int AuthorIdentity)
+        {
+            string strSql = @"select A.ArticleId,a.ArticleTitle,a.ArticleIntro,a.ArticleCover,a.BrowseAmount,a.PublishTime
+                                 from BM_ArticleList A with(nolock)
+                                where a.IsDel=0 and a.EnableTop=1 and A.ArticleStatus=1  and A.AuthorIdentity=@AuthorIdentity  order by A.ArticleSort desc";
+
+            var param = new[] {
+                new SqlParameter("@AuthorIdentity", AuthorIdentity),
+            };
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, param))
+            {
+                List<ArticleBaseModel> data = DbHelperSQLP.GetEntityList<ArticleBaseModel>(dr);
+                if (data != null)
+                {
+                    data.ForEach((item) =>
+                    {
+                        item.ArticleUrl = WebConfig.articleDetailsDomain() + "/article/details.html?articleId=" + item.ArticleId;
+                        item.ArticleCover = WebConfig.reswebsite() + item.ArticleCover;
+                    });
+                }
+                return data;
+            }
+        }
+
+
+
         /// <summary>
         /// 获取资讯信息
         /// </summary>
@@ -222,7 +307,7 @@ namespace BAMENG.DAL
         /// <param name="remark">备注</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public bool SetArticleStatus(int articleId, int status,string remark)
+        public bool SetArticleStatus(int articleId, int status, string remark)
         {
             string strSql = "update BM_ArticleList set ArticleStatus=@ArticleStatus,Remark=@Remark  where ArticleId=@ArticleId";
             var param = new[] {
@@ -267,6 +352,22 @@ namespace BAMENG.DAL
                         new SqlParameter("@PublishTime",model.PublishTime),
                         new SqlParameter("@UpdateTime",DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
                         new SqlParameter("@ArticleId",model.ArticleId)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+        }
+
+        /// <summary>
+        /// 更新资讯浏览量
+        /// </summary>
+        /// <param name="articleId">The article identifier.</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool UpdateArticleAmount(int articleId)
+        {
+
+            string strSql = "update BM_ArticleList set BrowseAmount=BrowseAmount+1 where ArticleId=@ArticleId";
+            var param = new[] {
+                new SqlParameter("@ArticleId",articleId)
             };
             return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
         }

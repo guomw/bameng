@@ -2,6 +2,7 @@
 using BAMENG.LOGIC;
 using BAMENG.MODEL;
 using HotCoreUtils.Helper;
+using HotCoreUtils.Uploader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,20 @@ namespace BAMENG.API.Controllers
 
         /// <summary>
         /// 初始化接口 POST: sys/init
-        /// </summary>  
+        /// </summary>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        [ActionAuthorize]
+        [ActionAuthorize(AuthLogin = false)]
         public ActionResult Init()
         {
             try
             {
-                var data = AppSystemLogic.Instance.Initialize("1.0.0");
+                AppInitModel data = AppServiceLogic.Instance.Initialize(Version, OS);
+                data.userData = GetUserData();
+                if (data.userData != null)
+                    data.baseData.userStatus = data.userData.IsActive;
+                else
+                    data.baseData.userStatus = -1;
+
                 return Json(new ResultModel(ApiStatusCode.OK, data));
             }
             catch (Exception ex)
@@ -41,12 +48,12 @@ namespace BAMENG.API.Controllers
         /// 检查更新 POST: sys/checkupdate
         /// </summary>
         /// <param name="clientVersion">客户的版本号</param>
-        /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        /// <returns><![CDATA[{status:200,statusText:"OK",data:{ AppVersionModel }}]]></returns>
         public ActionResult CheckUpdate(string clientVersion)
         {
             try
             {
-                var versionData = AppSystemLogic.Instance.CheckUpdate(clientVersion, "android");
+                var versionData = AppServiceLogic.Instance.CheckUpdate(clientVersion, "android");
 
                 return Json(new ResultModel(ApiStatusCode.OK, versionData));
             }
@@ -61,29 +68,46 @@ namespace BAMENG.API.Controllers
         /// 发送短信 POST: sys/sendsms
         /// </summary>
         /// <param name="mobile">The mobile.</param>
+        /// <param name="type">1普通短信  2语音短信</param>
         /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        public ActionResult SendSms(string mobile)
+        public ActionResult SendSms(string mobile,int type)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            ApiStatusCode apiCode;
+            SmsLogic.SendSms(type, mobile, out apiCode);
+            return Json(new ResultModel(apiCode));
         }
         /// <summary>
         /// 焦点图片 POST: sys/focuspic
         /// </summary>
         /// <param name="type">0集团轮播图，2 首页轮播图</param>
-        /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        /// <returns><![CDATA[{status:200,statusText:"OK",data:[{FocusPicModel},{FocusPicModel}]}]]></returns>
+        [ActionAuthorize]
         public ActionResult FocusPic(int type)
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            var data = FocusPicLogic.GetAppList(type);
+            return Json(new ResultModel(ApiStatusCode.OK, data));
         }
 
 
         /// <summary>
         /// 上传图片 POST: sys/uploadpic
         /// </summary>
-        /// <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        /// <returns><![CDATA[{ picurl:"/resource/bameng/image/xxxxx.jpg" }]]></returns>
+        [ActionAuthorize]
         public ActionResult UploadPic()
         {
-            return Json(new ResultModel(ApiStatusCode.OK));
+            string imgContent = string.Empty;
+            HttpPostedFileBase oFile = Request.Files[0];
+            if (oFile == null)
+            {
+                return Json(new ResultModel(ApiStatusCode.请上传图片));
+            }
+            string fileName = "/resource/bameng/image/" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + StringHelper.CreateCheckCodeWithNum(6) + ".jpg";
+            oFile.SaveAs(fileName);
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["picurl"] = fileName;
+
+            return Json(new ResultModel(ApiStatusCode.OK, dict));
         }
 
 

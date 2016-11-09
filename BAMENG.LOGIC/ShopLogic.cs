@@ -7,6 +7,7 @@
 **/
 
 
+using BAMENG.CONFIG;
 using BAMENG.MODEL;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,35 @@ namespace BAMENG.LOGIC
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static bool EditShopInfo(ShopModel model)
+        public static bool EditShopInfo(ShopModel model, out ApiStatusCode apiCode)
         {
+            apiCode = ApiStatusCode.OK;
             using (var dal = FactoryDispatcher.ShopFactory())
             {
                 if (model.ShopID > 0)
-                    return dal.UpdateShopInfo(model);
+                {
+                    if (dal.UpdateShopInfo(model))
+                    {
+                        apiCode = ApiStatusCode.OK;
+                        return true;
+                    }
+                    else
+                        apiCode = ApiStatusCode.更新失败;
+                }
                 else
-                    return dal.AddShopInfo(model) > 0;
+                {
+                    int flag = dal.AddShopInfo(model);
+                    if (flag == -1)
+                    {
+                        apiCode = ApiStatusCode.用户名已存在;
+                        return false;
+                    }
+                    else if (flag > 0)
+                        return true;
+                    else
+                        apiCode = ApiStatusCode.添加失败;
+                }
+                return false;
             }
         }
 

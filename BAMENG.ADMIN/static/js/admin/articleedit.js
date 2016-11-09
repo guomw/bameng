@@ -31,7 +31,7 @@ $.validator.setDefaults({
 
 var articleHelper = {
     ajaxUrl: "/handler/HQ.ashx",
-    picDir: "article/img",
+    picDir: "bameng/article/img",
     dataId: hotUtil.getQuery("articleid"),
     audit: hotUtil.getQuery("audit"),
     loadData: function () {
@@ -86,7 +86,8 @@ var articleHelper = {
                 if (ret) {
                     if (ret.status == 200) {
                         swal("提交成功", "", "success");
-                        $("#signupForm")[0].reset();
+                        if (articleHelper.dataId == 0)
+                            $("#signupForm")[0].reset();
                     }
                 }
                 hotUtil.loading.close();

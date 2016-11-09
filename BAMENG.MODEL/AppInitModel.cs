@@ -51,7 +51,7 @@ namespace BAMENG.MODEL
     public class AppInitBaseSettting
     {
         /// <summary>
-        /// 用户状态 1激活  0冻结（该用户不可用）
+        /// 用户状态 1激活  0冻结（该用户不可用） -1 未登录
         /// </summary>
         public int userStatus { get; set; }
 

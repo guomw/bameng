@@ -34,10 +34,12 @@ namespace BAMENG.DAL
         /// <returns></returns>
         public int AddShopInfo(ShopModel model)
         {
-            string strSql = @"insert into BM_ShopManage(ShopName,ShopType,ShopBelongId,ShopProv,ShopCity,ShopArea,ShopAddress,Contacts,ContactWay,LoginName,LoginPassword,IsActive)
+            if (!IsExist(model.LoginName))
+            {
+                string strSql = @"insert into BM_ShopManage(ShopName,ShopType,ShopBelongId,ShopProv,ShopCity,ShopArea,ShopAddress,Contacts,ContactWay,LoginName,LoginPassword,IsActive)
                                 values (@ShopName,@ShopType,@ShopBelongId,@ShopProv,@ShopCity,@ShopArea,@ShopAddress,@Contacts,@ContactWay,@LoginName,@LoginPassword,@IsActive)";
 
-            var param = new[] {
+                var param = new[] {
                         new SqlParameter("@ShopName", model.ShopName),
                         new SqlParameter("@ShopType", model.ShopType),
                         new SqlParameter("@ShopBelongId", model.ShopBelongId),
@@ -50,9 +52,27 @@ namespace BAMENG.DAL
                         new SqlParameter("@LoginName", model.LoginName),
                         new SqlParameter("@LoginPassword",  EncryptHelper.MD5_8(model.LoginPassword)),
                         new SqlParameter("@IsActive",model.IsActive)
-            };
-            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
+                };
+                return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
+            }
+            else
+                return -1;
         }
+
+        /// <summary>
+        /// 判断用户名是否存在
+        /// </summary>
+        /// <param name="loginName">Name of the login.</param>
+        /// <returns>true if the specified login name is exist; otherwise, false.</returns>
+        public bool IsExist(string loginName)
+        {
+            string strSql = "select COUNT(1) from BM_ShopManage where LoginName=@LoginName";
+            var param = new[] {
+                        new SqlParameter("@LoginName",loginName)
+            };
+            return Convert.ToInt32(DbHelperSQLP.ExecuteScalar(WebConfig.getConnectionString(), CommandType.Text, strSql, param)) > 0;
+        }
+
         /// <summary>
         /// 删除门店
         /// </summary>

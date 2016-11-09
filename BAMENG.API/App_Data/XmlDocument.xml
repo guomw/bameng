@@ -21,12 +21,6 @@
             </summary>
             <seealso cref="T:System.Web.Mvc.Controller" />
         </member>
-        <member name="P:BAMENG.API.BaseController.Instance">
-            <summary>
-            Gets the instance.
-            </summary>
-            <value>The instance.</value>
-        </member>
         <member name="M:BAMENG.API.BaseController.Json(System.Object,System.String,System.Text.Encoding)">
             <summary>
             创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式的 <see cref="T:System.Web.Mvc.JsonResult" /> 对象。
@@ -60,51 +54,158 @@
             <param name="data">要序列化的 JavaScript 对象图。</param>
             <returns>将指定对象序列化为 JSON 格式的 JSON 结果对象。在执行此方法所准备的结果对象时，ASP.NET MVC 框架会将该对象写入响应。</returns>
         </member>
-        <member name="P:BAMENG.API.BaseController.AuthUserData">
+        <member name="M:BAMENG.API.BaseController.GetParams(System.Web.HttpRequestBase)">
             <summary>
-            授权登录用户数据
+            获取 get/post 数据
+            </summary>        
+            <returns></returns>
+        </member>
+        <member name="P:BAMENG.API.BaseController.Version">
+            <summary>
+            版本号
             </summary>
-            <value>The user data.</value>
+            <value>The application version.</value>
+        </member>
+        <member name="P:BAMENG.API.BaseController.OS">
+            <summary>
+            系统 android / iphone
+            </summary>
+            <value>The os.</value>
+        </member>
+        <member name="P:BAMENG.API.BaseController.timestamp">
+            <summary>
+            时间戳
+            </summary>
+            <value>The timestamp.</value>
+        </member>
+        <member name="M:BAMENG.API.BaseController.GetQuery(System.String,System.String)">
+            <summary>
+            获取请求参数
+            </summary>
+            <param name="key">The key.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>System.String.</returns>
+        </member>
+        <member name="M:BAMENG.API.BaseController.GetQuery(System.String,System.Int32)">
+            <summary>
+            获取请求参数
+            </summary>
+            <param name="key">The key.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>System.Int32.</returns>
+        </member>
+        <member name="M:BAMENG.API.BaseController.GetQuery(System.String,System.Decimal)">
+            <summary>
+            获取请求参数
+            </summary>
+            <param name="key">The key.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>System.Decimal.</returns>
+        </member>
+        <member name="M:BAMENG.API.BaseController.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
+            <summary>
+            在调用操作方法前调用。
+            </summary>
+            <param name="filterContext">有关当前请求和操作的信息。</param>
+        </member>
+        <member name="M:BAMENG.API.BaseController.GetUserData">
+            <summary>
+            只有在授权成功后，才能获取到
+            </summary>
+            <returns>UserModel.</returns>
+        </member>
+        <member name="M:BAMENG.API.BaseController.GetAuthUserId">
+            <summary>
+            获取授权用户ID
+            </summary>
+            <returns>System.Int32.</returns>
         </member>
         <member name="T:BAMENG.API.Controllers.ArticleController">
             <summary>
             资讯接口
             </summary>
         </member>
-        <member name="M:BAMENG.API.Controllers.ArticleController.list">
+        <member name="M:BAMENG.API.Controllers.ArticleController.list(System.Int32,System.Int32,System.Int32)">
             <summary>
             资讯列表  article/list
             </summary>
-            <returns><![CDATA[{status:200,statusText:"OK",data:[{},{}]}]]></returns>        
+            <param name="identity">资讯身份 0集团，1总店，2分店  3盟主 4盟友</param>
+            <param name="pageIndex">Index of the page.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>ActionResult.</returns>
+            <example>
+              <code>
+            {
+            status:200,
+            statusText:"OK",
+            data:{
+            list:{
+            ResultPageModel
+            },
+            top:[
+            {
+            ArticleBaseModel
+            }]
+            }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:BAMENG.API.Controllers.ArticleController.create(System.String,System.String,System.String)">
+            <summary>
+            创建资讯
+            </summary>
+            <param name="title">资讯标题</param>
+            <param name="content">资讯内容</param>
+            <param name="ids">发送对象,格式如:1|2|3</param>
+            <returns>ActionResult.</returns>
         </member>
         <member name="T:BAMENG.API.Controllers.CustomerController">
             <summary>
             客户接口
             </summary>
         </member>
-        <member name="M:BAMENG.API.Controllers.CustomerController.auditList">
-            <summary>
-            审核列表 POST: customer/auditList
-            </summary>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        </member>
-        <member name="M:BAMENG.API.Controllers.CustomerController.audit">
-            <summary>
-            审核 POST: customer/audit
-            </summary>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        </member>
-        <member name="M:BAMENG.API.Controllers.CustomerController.create">
-            <summary>
-            创建客户新 POST: customer/create
-            </summary>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
-        </member>
-        <member name="M:BAMENG.API.Controllers.CustomerController.list">
+        <member name="M:BAMENG.API.Controllers.CustomerController.list(System.Int32,System.Int32,System.Int32)">
             <summary>
             客户列表 POST: customer/list
             </summary>
+            <param name="type">0所有客户 1未处理  2已处理</param>
+            <param name="pageIndex">Index of the page.</param>
+            <param name="pageSize">Size of the page.</param>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        </member>
+        <member name="M:BAMENG.API.Controllers.CustomerController.audit(System.Int32,System.Int32)">
+            <summary>
+            审核 POST: customer/audit
+            </summary>
+            <param name="cid">客户ID</param>
+            <param name="status">审核状态 1已同意  2已拒绝</param>
+            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        </member>
+        <member name="M:BAMENG.API.Controllers.CustomerController.create(System.String,System.String,System.String,System.String)">
+            <summary>
+            创建客户 POST: customer/create
+            </summary>
+            <param name="username">客户姓名</param>
+            <param name="mobile">客户手机</param>
+            <param name="address">客户地址</param>
+            <param name="remark">客户备注</param>
+            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+        </member>
+        <member name="M:BAMENG.API.Controllers.CustomerController.details(System.Int32)">
+            <summary>
+            客户详情
+            </summary>
+            <param name="cid">客户ID</param>
+            <returns>ActionResult.</returns>
+        </member>
+        <member name="M:BAMENG.API.Controllers.CustomerController.UpdateInShop(System.Int32,System.Int32)">
+            <summary>
+            更新客户进店状态
+            </summary>
+            <param name="cid">客户ID</param>
+            <param name="status">1进店 0未进店</param>
+            <returns>ActionResult.</returns>
         </member>
         <member name="T:BAMENG.API.Controllers.OrderController">
             <summary>
@@ -168,7 +269,7 @@
         <member name="M:BAMENG.API.Controllers.SysController.Init">
             <summary>
             初始化接口 POST: sys/init
-            </summary>  
+            </summary>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.SysController.CheckUpdate(System.String)">
@@ -176,13 +277,14 @@
             检查更新 POST: sys/checkupdate
             </summary>
             <param name="clientVersion">客户的版本号</param>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+            <returns><![CDATA[{status:200,statusText:"OK",data:{ AppVersionModel }}]]></returns>
         </member>
-        <member name="M:BAMENG.API.Controllers.SysController.SendSms(System.String)">
+        <member name="M:BAMENG.API.Controllers.SysController.SendSms(System.String,System.Int32)">
             <summary>
             发送短信 POST: sys/sendsms
             </summary>
             <param name="mobile">The mobile.</param>
+            <param name="type">1普通短信  2语音短信</param>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.SysController.FocusPic(System.Int32)">
@@ -190,13 +292,13 @@
             焦点图片 POST: sys/focuspic
             </summary>
             <param name="type">0集团轮播图，2 首页轮播图</param>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+            <returns><![CDATA[{status:200,statusText:"OK",data:[{FocusPicModel},{FocusPicModel}]}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.SysController.UploadPic">
             <summary>
             上传图片 POST: sys/uploadpic
             </summary>
-            <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
+            <returns><![CDATA[{ picurl:"/resource/bameng/image/xxxxx.jpg" }]]></returns>
         </member>
         <member name="T:BAMENG.API.Controllers.UserController">
             <summary>
@@ -244,10 +346,12 @@
             </summary>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
-        <member name="M:BAMENG.API.Controllers.UserController.allylist">
+        <member name="M:BAMENG.API.Controllers.UserController.allylist(System.Int32,System.Int32)">
             <summary>
             盟友列表 POST: user/allylist
             </summary>
+            <param name="pageIndex">Index of the page.</param>
+            <param name="pageSize">Size of the page.</param>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.UserController.ConvertAuditList">
@@ -274,10 +378,13 @@
             </summary>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
-        <member name="M:BAMENG.API.Controllers.UserController.setallyaward">
+        <member name="M:BAMENG.API.Controllers.UserController.setallyRaward(System.Decimal,System.Decimal,System.Decimal)">
             <summary>
             设置盟友奖励 POST: user/setallyaward
             </summary>
+            <param name="creward">客户资料提交奖励</param>
+            <param name="orderreward">订单成交奖励</param>
+            <param name="shopreward">客户进店奖励</param>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.UserController.scoreList">
@@ -292,11 +399,12 @@
             </summary>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
-        <member name="M:BAMENG.API.Controllers.UserController.AllyInfo">
+        <member name="M:BAMENG.API.Controllers.UserController.AllyInfo(System.Int32)">
             <summary>
             盟友详情 POST: user/AllyInfo
             </summary>
-            <returns></returns>
+            <param name="userid">盟友用户ID</param>
+            <returns>JsonResult.</returns>
         </member>
         <member name="M:BAMENG.API.Controllers.UserController.AllyApply">
             <summary>
@@ -316,13 +424,12 @@
             </summary>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
-        <member name="M:BAMENG.API.Controllers.UserController.ChanagePassword(System.String,System.String,System.String)">
+        <member name="M:BAMENG.API.Controllers.UserController.ChanagePassword(System.String,System.String)">
             <summary>
             修改密码 POST: user/ChanagePassword
             </summary>
             <param name="oldPassword">The old password.</param>
             <param name="newPassword">The new password.</param>
-            <param name="confirmPassword">The confirm password.</param>
             <returns><![CDATA[{status:200,statusText:"OK",data:{}}]]></returns>
         </member>
         <member name="M:BAMENG.API.Controllers.UserController.ChanageMobile(System.String,System.String,System.String)">
@@ -389,11 +496,11 @@
             验证签名
             </summary>
         </member>
-        <member name="M:BAMENG.API.ApiAuthorizeAttribute.onExcute(System.Web.HttpContextBase)">
+        <member name="M:BAMENG.API.ApiAuthorizeAttribute.onExcute(System.Web.Mvc.ActionExecutingContext)">
             <summary>
             Ons the excute.
             </summary>
-            <param name="context">The context.</param>
+            <param name="filterContext">The context.</param>
             <returns>ApiRequestStatusCode.</returns>
         </member>
         <member name="M:BAMENG.API.ApiAuthorizeAttribute.GetParams(System.Web.HttpRequestBase)">
@@ -426,6 +533,12 @@
             身份授权登录
             </summary>
             <value>true if authentication; otherwise, false.</value>
+        </member>
+        <member name="P:BAMENG.API.ActionAuthorizeAttribute.EnableSign">
+            <summary>
+            启用签名,默认是启用
+            </summary>
+            <value>true if [enable sign]; otherwise, false.</value>
         </member>
         <member name="M:BAMENG.API.ActionAuthorizeAttribute.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
             <summary>

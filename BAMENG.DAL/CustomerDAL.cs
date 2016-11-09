@@ -23,7 +23,7 @@ namespace BAMENG.DAL
 {
     public class CustomerDAL : AbstractDAL, ICustomerDAL
     {
-        private const string APP_SELECT = @"select C.ID,C.BelongOne,C.BelongTwo,C.Status,C.Name,C.Mobile,C.Addr,C.Remark,C.ShopId,C.CreateTime,U.UB_UserRealName as BelongOneName,UB.UB_UserRealName as BelongTwoName,S.ShopName from BM_CustomerManage C 
+        private const string APP_SELECT = @"select C.ID,C.BelongOne,C.BelongTwo,C.Status,C.InShop,C.Name,C.Mobile,C.Addr,C.Remark,C.ShopId,C.CreateTime,U.UB_UserRealName as BelongOneName,UB.UB_UserRealName as BelongTwoName,S.ShopName from BM_CustomerManage C 
                                                 left join Hot_UserBaseInfo U with(nolock) on U.UB_UserID=C.BelongOne
                                                 left join Hot_UserBaseInfo UB with(nolock) on UB.UB_UserID=C.BelongTwo
                                                 left join BM_ShopManage S with(nolock) on  S.ShopID=C.ShopId
@@ -85,6 +85,65 @@ namespace BAMENG.DAL
             //生成sql语句
             return getPageData<CustomerModel>(model.PageSize, model.PageIndex, strSql, "C.CreateTime", false, param);
         }
+
+
+        /// <summary>
+        /// 获取客户列表
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="identity">0盟友  1盟主</param>
+        /// <param name="type">0所有客户 1未处理  2已处理</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <returns>ResultPageModel.</returns>
+        public ResultPageModel GetAppCustomerList(int UserId, int identity, int type, int pageIndex, int pageSize)
+        {
+            string strSql = APP_SELECT;
+            //Status 0 审核中，1已同意  2已拒绝
+
+            if (type == 1)
+                strSql += " and C.Status= 0";
+            if (type == 2)
+                strSql += " and C.Status<>0";
+
+            if (identity == 1)
+                strSql += " and (C.BelongTwo= @UserID or C.BelongOne= @UserID)";
+            else
+                strSql += " and C.BelongOne= @UserID";
+
+            string orderbyField = "C.CreateTime";
+            bool orderby = false;
+
+            if (type == 2)
+            {
+                orderbyField = "C.Status";
+            }
+            var param = new[] {
+                new SqlParameter("@UserID",UserId),
+            };
+            //生成sql语句
+            return getPageData<CustomerModel>(pageSize, pageIndex, strSql, orderbyField, orderby, param);
+        }
+
+
+
+        /// <summary>
+        /// 获取客户信息
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <returns>CustomerModel.</returns>
+        public CustomerModel GetModel(int customerId)
+        {
+            string strSql = APP_SELECT + " and ID=@ID";
+            var param = new[] {
+                new SqlParameter("@ID",customerId),
+            };
+            using (SqlDataReader dr = DbHelperSQLP.ExecuteReader(WebConfig.getConnectionString(), CommandType.Text, strSql, param))
+            {
+                return DbHelperSQLP.GetEntity<CustomerModel>(dr);
+            }
+        }
+
         /// <summary>
         /// 添加客户
         /// </summary>
@@ -94,7 +153,7 @@ namespace BAMENG.DAL
         {
             if (!IsExist(model.Mobile, model.Addr))
             {
-                string strSql = "insert into BM_CustomerManage (BelongOne,BelongTwo,Status,Name,Mobile,Addr,Remark,ShopId) values(@BelongOne,@BelongTwo,@Status,@Name,@Mobile,@Addr,@Remark,@ShopId)";
+                string strSql = "insert into BM_CustomerManage (BelongOne,BelongTwo,Status,Name,Mobile,Addr,Remark,ShopId,InShop) values(@BelongOne,@BelongTwo,@Status,@Name,@Mobile,@Addr,@Remark,@ShopId,@InShop)";
                 var param = new[] {
                     new SqlParameter("@BelongOne",model.BelongOne),
                     new SqlParameter("@BelongTwo",model.BelongTwo),
@@ -103,7 +162,8 @@ namespace BAMENG.DAL
                     new SqlParameter("@Mobile",model.Mobile),
                     new SqlParameter("@Addr",model.Addr),
                     new SqlParameter("@Remark",model.Remark),
-                    new SqlParameter("@ShopId",model.ShopId)
+                    new SqlParameter("@ShopId",model.ShopId),
+                    new SqlParameter("@InShop",model.InShop)
                 };
                 return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param);
             }
@@ -158,6 +218,23 @@ namespace BAMENG.DAL
             var param = new[] {
                 new SqlParameter("@BelongTwo",userId),
                 new SqlParameter("@Status",status),
+                new SqlParameter("@ID",customerId)
+            };
+            return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;
+
+        }
+
+        /// <summary>
+        /// 更新客户进店状态
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <param name="status">1进店 0未进店</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        public bool UpdateInShopStatus(int customerId, int status)
+        {
+            string strSql = "update BM_CustomerManage set InShop=@InShop,InShopTime=getdate() where ID=@ID";
+            var param = new[] {                
+                new SqlParameter("@InShop",status),
                 new SqlParameter("@ID",customerId)
             };
             return DbHelperSQLP.ExecuteNonQuery(WebConfig.getConnectionString(), CommandType.Text, strSql, param) > 0;

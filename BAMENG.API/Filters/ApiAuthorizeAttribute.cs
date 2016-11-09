@@ -1,4 +1,5 @@
 ﻿using BAMENG.CONFIG;
+using BAMENG.LOGIC;
 using BAMENG.MODEL;
 using HotCoreUtils.Helper;
 using System;
@@ -31,7 +32,7 @@ namespace BAMENG.API
             Action action = () =>
             {
                 context.HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", origin);
-                context.HttpContext.Response.StatusCode = (int)ApiRequestStatusCode.OK;
+                context.HttpContext.Response.StatusCode = (int)ApiStatusCode.OK;
             };
             if (AllowSites != null && AllowSites.Any())
             {
@@ -42,7 +43,7 @@ namespace BAMENG.API
                 }
                 else
                 {
-                    context.HttpContext.Response.StatusCode = (int)ApiRequestStatusCode.禁止请求;
+                    context.HttpContext.Response.StatusCode = (int)ApiStatusCode.禁止请求;
                     Success = false;
                 }
             }
@@ -59,20 +60,19 @@ namespace BAMENG.API
         /// <summary>
         /// Ons the excute.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="filterContext">The context.</param>
         /// <returns>ApiRequestStatusCode.</returns>
-        public ApiRequestStatusCode onExcute(HttpContextBase context)
+        public ApiStatusCode onExcute(ActionExecutingContext filterContext)
         {
-            ctx = context;
-            Dictionary<string, object> prams = GetParams(context.Request);
+            ctx = filterContext.HttpContext;
+            Dictionary<string, object> prams = GetParams(filterContext.HttpContext.Request);
             string requestSign = string.Empty;
             if (prams.ContainsKey("sign"))
                 requestSign = prams["sign"].ToString();
 
             if (string.IsNullOrEmpty(requestSign))
             {
-                LogHelper.Log(string.Format("currentSign:{0}", requestSign));
-                return ApiRequestStatusCode.未授权;
+                return ApiStatusCode.未授权;
             }
 
             Dictionary<string, string> paramters = new Dictionary<string, string>();
@@ -80,16 +80,15 @@ namespace BAMENG.API
             {
                 if (item.Key != "sign" && !string.IsNullOrEmpty(item.Value.ToString()))
                 {
-                    paramters.Add(item.Key.ToLower(), context.Server.UrlDecode(item.Value.ToString()));
+                    paramters.Add(item.Key.ToLower(), filterContext.HttpContext.Server.UrlDecode(item.Value.ToString()));
                 }
             }
             string currentSign = SignatureHelper.BuildSign(paramters, ConstConfig.SECRET_KEY);
-            //LogHelper.Log(string.Format("currentSign:{0},requestSign:{1}", currentSign, requestSign));
             if (!requestSign.Equals(currentSign))
             {
-                return ApiRequestStatusCode.未授权;
+                return ApiStatusCode.未授权;
             }
-            return ApiRequestStatusCode.OK;
+            return ApiStatusCode.OK;
         }
         /// <summary>
         /// 获取 get/post 数据
@@ -179,7 +178,28 @@ namespace BAMENG.API
                 _Auth = value;
             }
         }
+
+        /// <summary>
+        /// 启用签名,默认是启用
+        /// </summary>
+        /// <value>true if [enable sign]; otherwise, false.</value>
+        public bool EnableSign
+        {
+            get
+            {
+                return _EnableSign;
+            }
+
+            set
+            {
+                _EnableSign = value;
+            }
+        }
+
         private bool _Auth = true;
+
+
+        private bool _EnableSign = true;
 
         /// <summary>
         /// 
@@ -189,29 +209,57 @@ namespace BAMENG.API
         {
             //判断当前访问域是否有访问权限
             bool flag = AllowCrossDomainVisit ? AllowOriginAttribute.onExcute(filterContext, AllowSites) : true;
-
             //验证授权登录
             if (flag)
             {
                 //如果启用了授权登录，需要验证登录信息是否正确
                 if (AuthLogin)
                 {
-                    BaseController.Instance.AuthUserData = new UserModel() { };
-                }
-                else
-                {
-                    BaseController.Instance.AuthUserData = null;
+                    try
+                    {
+                        //TODO：验证授权登录信息   
+                        string Authorization = filterContext.HttpContext.Request.Headers["Authorization"];
+                        if (!string.IsNullOrEmpty(Authorization))
+                        {
+                            if (UserLogic.GetUserIdByAuthToken(Authorization) <= 0)
+                            {
+                                filterContext.Result = new JsonResult() { ContentType = "application/json", Data = new ResultModel(ApiStatusCode.令牌失效), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            filterContext.Result = new JsonResult() { ContentType = "application/json", Data = new ResultModel(ApiStatusCode.令牌失效), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                            return;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        filterContext.Result = new JsonResult() { ContentType = "application/json", Data = new ResultModel(ApiStatusCode.令牌失效), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                        return;
+                    }
                 }
                 //如果非测试环境下，需要验证签名
-                if (!WebConfig.debugMode())
+                if (EnableSign)
                 {
                     ApiAuthorizeAttribute authorize = new ApiAuthorizeAttribute();
                     //签名验证,并返回验证结果
-                    ApiRequestStatusCode apiCode = authorize.onExcute(filterContext.HttpContext);
-
-                    filterContext.HttpContext.Response.StatusCode = 200;// (int)apiCode;
+                    ApiStatusCode apiCode = authorize.onExcute(filterContext);
+                    if (apiCode != ApiStatusCode.OK)
+                    {
+                        filterContext.HttpContext.Response.StatusCode = (int)apiCode;
+                        filterContext.Result = new JsonResult() { ContentType = "application/json", Data = new ResultModel(ApiStatusCode.未授权), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                        return;
+                    }
                 }
             }
+            else
+            {
+                filterContext.HttpContext.Response.StatusCode = (int)ApiStatusCode.禁止请求;
+                filterContext.Result = new JsonResult() { ContentType = "application/json", Data = new ResultModel(ApiStatusCode.禁止请求), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return;
+            }
+
         }
 
     }

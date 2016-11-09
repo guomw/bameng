@@ -25,6 +25,27 @@ namespace BAMENG.IDAL
         /// <returns></returns>
         ResultPageModel GetCustomerList(SearchModel model, bool isvalid = true);
 
+
+        /// <summary>
+        /// 获取客户列表
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="identity">0盟友  1盟主</param>
+        /// <param name="type">0所有客户 1未处理  2已处理</param>
+        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageSize">Size of the page.</param>
+        /// <returns>ResultPageModel.</returns>
+        ResultPageModel GetAppCustomerList(int UserId, int identity, int type, int pageIndex, int pageSize);
+
+
+
+        /// <summary>
+        /// 获取客户信息
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <returns>CustomerModel.</returns>
+        CustomerModel GetModel(int customerId);
+
         /// <summary>
         /// 修改客户
         /// </summary>
@@ -56,6 +77,14 @@ namespace BAMENG.IDAL
         /// <returns></returns>
         bool UpdateStatus(int customerId, int status, int userId);
 
+
+        /// <summary>
+        /// 更新客户进店状态
+        /// </summary>
+        /// <param name="customerId">The customer identifier.</param>
+        /// <param name="status">1进店 0未进店</param>
+        /// <returns>true if XXXX, false otherwise.</returns>
+        bool UpdateInShopStatus(int customerId, int status);
 
         /// <summary>
         /// 判断客户是否存在

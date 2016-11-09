@@ -15,7 +15,7 @@ var shopHelper = {
     ajaxUrl: "/handler/HQ.ashx",
     loaclData: [],
     pageIndex: 1,
-    reset:null,
+    reset: null,
     loadList: function (page) {
         var self = this;
         self.loaclData = [];
@@ -41,7 +41,7 @@ var shopHelper = {
                             tempHtml = tempHtml.replace(/{ShopID}/gm, item.ShopID);
                             tempHtml = tempHtml.replace("{ShopName}", item.ShopName);
                             tempHtml = tempHtml.replace("{Contacts}", item.Contacts);
-                            tempHtml = tempHtml.replace("{ShopProv}", item.ShopProv + item.ShopCity + item.ShopArea);
+                            tempHtml = tempHtml.replace("{ShopProv}", item.ShopProv + item.ShopCity + item.ShopArea + item.ShopAddress);
                             tempHtml = tempHtml.replace("{ContactWay}", item.ContactWay);
                             tempHtml = tempHtml.replace("{IsActive}", item.IsActive);
                             tempHtml = tempHtml.replace("{ActiveStatus}", item.IsActive == 1 ? "<span style='color:red;'>激活</span>" : "已冻结")
@@ -197,7 +197,7 @@ $(function () {
         hideCityInput: "#city",
         hideProvinceInput: "#province"
     }).init();
-    
+
 
 
     new IIInsomniaCityPicker({
@@ -209,7 +209,7 @@ $(function () {
 
 
     var e = "<i class='fa fa-times-circle'></i> ";
-    shopHelper.reset=$("#signupForm").validate({
+    shopHelper.reset = $("#signupForm").validate({
         rules: {
             shopname: "required",
             shopcity: "required",
@@ -222,10 +222,10 @@ $(function () {
                 required: !0,
                 minlength: 5
             },
-            password: {                
+            password: {
                 minlength: 6
             },
-            confirm_password: {                
+            confirm_password: {
                 minlength: 6,
                 equalTo: "#password"
             }
@@ -242,10 +242,10 @@ $(function () {
                 required: e + "请输入您的登录名",
                 minlength: e + "登录名必须5个字符以上"
             },
-            password: {                
+            password: {
                 minlength: e + "密码必须6个字符以上"
             },
-            confirm_password: {                
+            confirm_password: {
                 minlength: e + "密码必须6个字符以上",
                 equalTo: e + "两次输入的密码不一致"
             }

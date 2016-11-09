@@ -1,7 +1,7 @@
 ##ignore this file##
 *.sln
-/bin/
-/Log/
-/obj/
+bin
+Log
+obj
 .vs
-/BAMENG.ADMIN/Log
+

@@ -156,6 +156,21 @@ namespace BAMENG.ADMIN.handler
                     case "GETFOCUSPICLIST":
                         GetFocusPicList();
                         break;
+                    case "EDITFOCUSPIC":
+                        EditFocusPic();
+                        break;
+                    case "DELETEFOCUSPIC":
+                        DeleteFocusPic();
+                        break;
+                    case "SETFOCUSENABLE":
+                        SetFocusEnable();
+                        break;
+                    case "GETCONFIGLIST":
+                        GetConfiglist();
+                        break;
+                    case "EDITCONFIG":
+                        EditConfig();
+                        break;
                     default:
                         break;
                 }
@@ -176,8 +191,8 @@ namespace BAMENG.ADMIN.handler
         /// </summary>
         private void GetShopList()
         {
-            int shopType = 1;
-            int shopBelongId = 0;
+            int shopType = user.UserIndentity == 0 ? 1 : 2;
+            int shopBelongId = user.UserIndentity == 0 ? 0 : user.ID;
 
             SearchModel model = new SearchModel()
             {
@@ -204,14 +219,15 @@ namespace BAMENG.ADMIN.handler
             string password = GetFormValue("password", "");
             string shopprov = GetFormValue("shopprov", "");
             string shopcity = GetFormValue("shopcity", "");
-
+            string shopaddress = GetFormValue("shopaddress", "");
+            ApiStatusCode apiCode;
             bool flag = ShopLogic.EditShopInfo(new ShopModel()
             {
                 ShopID = ShopID,
                 ShopName = shopname,
                 ShopArea = "",
-                ShopAddress = "",
-                ShopBelongId = 0,
+                ShopAddress = shopaddress,
+                ShopBelongId = user.UserIndentity == 0 ? 0 : user.ID,
                 ShopCity = shopcity,
                 ShopProv = shopprov,
                 Contacts = username,
@@ -219,12 +235,12 @@ namespace BAMENG.ADMIN.handler
                 LoginName = userloginname,
                 LoginPassword = password,
                 IsActive = 1,
-                ShopType = 1
-            });
+                ShopType = user.UserIndentity == 0 ? 1 : 2
+            }, out apiCode);
             if (flag)
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
             else
-                json = JsonHelper.JsonSerializer(new ResultModel(ShopID > 0 ? ApiStatusCode.更新失败 : ApiStatusCode.添加失败));
+                json = JsonHelper.JsonSerializer(new ResultModel(apiCode));
         }
 
 
@@ -276,23 +292,24 @@ namespace BAMENG.ADMIN.handler
         /// </summary>
         private void EditUser()
         {
+            ApiStatusCode apiCode = ApiStatusCode.OK;
             //方便测试，此处门店ID写死，真实逻辑是，根据当前登录的门店账户，获取门店ID
             bool flag = UserLogic.EditUserInfo(new UserRegisterModel()
             {
                 loginName = GetFormValue("userloginname", ""),
                 username = GetFormValue("username", ""),
                 nickname = GetFormValue("usernickname", ""),
-                loginPassword = GetFormValue("password", ""),
+                loginPassword = EncryptHelper.MD5(GetFormValue("password", "")),
                 mobile = GetFormValue("usermobile", ""),
                 storeId = ConstConfig.storeId,
                 ShopId = user.ID,
                 UserIdentity = user.UserIndentity,
                 UserId = UserId
-            });
+            }, ref apiCode);
             if (flag)
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
             else
-                json = JsonHelper.JsonSerializer(new ResultModel(ShopID > 0 ? ApiStatusCode.更新失败 : ApiStatusCode.添加失败));
+                json = JsonHelper.JsonSerializer(new ResultModel(apiCode));
         }
 
         /// <summary>
@@ -510,6 +527,7 @@ namespace BAMENG.ADMIN.handler
         /// </summary>
         private void EditArticle()
         {
+            int ArticleId = GetFormValue("articleid", 0);
             //方便测试，此处门店ID写死，真实逻辑是，根据当前登录的门店账户，获取门店ID
             bool flag = ArticleLogic.EditArticle(new ArticleModel()
             {
@@ -522,7 +540,7 @@ namespace BAMENG.ADMIN.handler
                 ArticleBody = HttpUtility.UrlDecode(GetFormValue("content", "")),
                 SendTargetId = GetFormValue("targetid", 0),
                 ArticleSort = 0,
-                ArticleStatus = 1,
+                ArticleStatus = user.UserIndentity == 0 ? 1 : 0,
                 AuthorName = user.UserName,
                 AuthorId = user.ID,
                 AuthorIdentity = user.UserIndentity,
@@ -532,7 +550,7 @@ namespace BAMENG.ADMIN.handler
             if (flag)
                 json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
             else
-                json = JsonHelper.JsonSerializer(new ResultModel(ShopID > 0 ? ApiStatusCode.更新失败 : ApiStatusCode.添加失败));
+                json = JsonHelper.JsonSerializer(new ResultModel(ArticleId > 0 ? ApiStatusCode.更新失败 : ApiStatusCode.添加失败));
         }
 
 
@@ -565,7 +583,7 @@ namespace BAMENG.ADMIN.handler
                 PageSize = Convert.ToInt32(GetFormValue("pageSize", 20)),
                 startTime = GetFormValue("startTime", ""),
                 endTime = GetFormValue("endTime", ""),
-                key = GetFormValue("key", ""),                
+                key = GetFormValue("key", ""),
                 type = GetFormValue("type", 0),//0 资讯轮播图 1首页轮播图
             };
             var data = FocusPicLogic.GetList(model);
@@ -573,19 +591,71 @@ namespace BAMENG.ADMIN.handler
         }
 
         /// <summary>
-        /// Edits the focus pic.
+        /// 编辑焦点广告图
         /// </summary>
         private void EditFocusPic()
         {
-
+            FocusPicModel model = new FocusPicModel()
+            {
+                ID = GetFormValue("focusid", 0),
+                Title = GetFormValue("focustitle", ""),
+                LinkUrl = GetFormValue("focuslinkurl", ""),
+                PicUrl = GetFormValue("focuspicurl", ""),
+                Type = GetFormValue("type", 0),
+                IsEnable = GetFormValue("focusenable", 0),
+                Sort = GetFormValue("focussort", 0),
+                Description = GetFormValue("focusdescription", "")
+            };
+            if (FocusPicLogic.EditFocusPic(model))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.操作失败));
         }
 
         /// <summary>
-        /// Deletes the focus pic.
+        /// 删除焦点广告图
         /// </summary>
         private void DeleteFocusPic()
         {
+            if (FocusPicLogic.DeleteFocusPic(GetFormValue("focusid", 0)))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.删除失败));
+        }
 
+        /// <summary>
+        /// 设置轮播图启用或禁用
+        /// </summary>
+        private void SetFocusEnable()
+        {
+            if (FocusPicLogic.SetEnable(GetFormValue("focusid", 0)))
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
+            else
+                json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.操作失败));
+        }
+
+        /// <summary>
+        /// 编辑配置
+        /// </summary>
+        private void GetConfiglist()
+        {
+            var data = ConfigLogic.GetConfigList();
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK, data));
+        }
+
+
+        /// <summary>
+        /// 编辑配置
+        /// </summary>
+        private void EditConfig()
+        {
+            string config = GetFormValue("config", "");
+            if (string.IsNullOrEmpty(config))
+            {
+                List<ConfigModel> lst = JsonHelper.JsonDeserialize<List<ConfigModel>>(config);
+                ConfigLogic.GetConfigList();
+            }
+            json = JsonHelper.JsonSerializer(new ResultModel(ApiStatusCode.OK));
         }
     }
 }
