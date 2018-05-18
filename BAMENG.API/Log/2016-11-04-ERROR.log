@@ -1,2 +1,0 @@
-2016/11/4 10:27:48,842 ERROR Init error--->StackTrace:   在 BAMENG.LOGIC.AppSystemLogic.Initialize(String clientVersion)
-   在 BAMENG.API.Controllers.SysController.Init() 位置 J:\HOT\CODE\bameng\BAMENG.API\Controllers\SysController.cs:行号 30 message:找不到方法:“Void BAMENG.MODEL.AppInitBaseSettting.set_about(System.String)”。
